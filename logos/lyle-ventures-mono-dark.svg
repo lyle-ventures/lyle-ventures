@@ -5,6 +5,6 @@
   
   <!-- Wordmark -->
   <text x="41" y="21" fill="#ffffff" font-size="18" font-family="system-ui, -apple-system, sans-serif" font-weight="600" letter-spacing="-0.01em">
-    <tspan>Lyle</tspan><tspan fill="rgba(255,255,255,0.4)" dx="0.03em" font-size="1.15em">.</tspan><tspan dx="-0.1em">Ventures</tspan>
+    <tspan>Lyle</tspan><tspan fill="rgba(255,255,255,0.4)" dx="0.08em" font-size="1.15em">.</tspan><tspan dx="-0.1em">Ventures</tspan>
   </text>
 </svg>

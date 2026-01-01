@@ -15,7 +15,7 @@
 @layer components {
   /* Lattice Typography - Headlines */
   .headline-caps {
-    @apply font-sans font-light uppercase tracking-tighter;
+    @apply font-sans font-light tracking-tighter;
     line-height: 0.95;
   }
   

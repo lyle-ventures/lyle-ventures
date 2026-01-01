@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Primary Meta Tags -->
+  <title>{% if title == "Home" %}{{ site.title }} — Venture Capital for Frontier Technology{% else %}{{ title }} | {{ site.title }}{% endif %}</title>
+  <meta name="title" content="{% if title == 'Home' %}{{ site.title }} — Venture Capital for Frontier Technology{% else %}{{ title }} | {{ site.title }}{% endif %}">
+  <meta name="description" content="{{ description or site.description }}">
+  <meta name="robots" content="noindex">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/output.css">
+
+  <!-- Mobile-specific -->
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-black/10 safe-area-inset" style="background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14 sm:h-16">
+        <!-- Logo -->
+        <a href="/light/" class="flex items-center gap-2 sm:gap-2.5">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 border-[1.5px] border-gray-900 flex items-center justify-center">
+            <span class="text-[9px] sm:text-[11px] font-semibold tracking-wide text-gray-900">LV</span>
+          </div>
+          <span class="text-base sm:text-lg font-semibold tracking-tight text-gray-900">Lyle<span class="text-indigo-500" style="margin-left:-0.03em;margin-right:-0.1em;font-size:1.15em;">.</span>Ventures</span>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <div class="hidden sm:flex items-center gap-6 lg:gap-8">
+          <a href="/portfolio/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors">Portfolio</a>
+          <a href="/thesis/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors">Thesis</a>
+          <a href="/contact/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="sm:hidden p-2 -mr-2 text-gray-500" onclick="toggleMobileMenu()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+            <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden sm:hidden border-t border-black/10 bg-white">
+      <div class="px-4 py-4 space-y-3">
+        <a href="/portfolio/" class="block py-2 text-lg text-gray-600 hover:text-gray-900">Portfolio</a>
+        <a href="/thesis/" class="block py-2 text-lg text-gray-600 hover:text-gray-900">Thesis</a>
+        <a href="/contact/" class="block py-2 text-lg text-gray-600 hover:text-gray-900">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-14 sm:pt-16">
+    {{ content | safe }}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-black/10 mt-16 sm:mt-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 sm:gap-8">
+        <!-- Sectors -->
+        <div class="flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-2">
+          {% for sector in site.sectors %}
+          <span class="text-xs sm:text-sm font-medium" style="color: {{ sector.color }}">{{ sector.name | lower }}</span>
+          {% if not loop.last %}<span class="text-gray-300">|</span>{% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Logo -->
+        <a href="/light/" class="flex items-center gap-2">
+          <div class="w-6 h-6 border border-gray-400 flex items-center justify-center">
+            <span class="text-[8px] font-semibold tracking-wide text-gray-500">LV</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <p class="text-xs sm:text-sm text-gray-400">© 2025 Lyle Ventures. All rights reserved.</p>
+        <a href="mailto:ethan@lyle-ventures.xyz" class="text-xs sm:text-sm text-gray-400 hover:text-gray-600 transition-colors">
+          ethan@lyle-ventures.xyz
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Menu Script -->
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+
+      menu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>

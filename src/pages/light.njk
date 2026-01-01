@@ -1,0 +1,85 @@
+---
+layout: layouts/base-light.njk
+title: Home (Light Mode)
+permalink: /light/
+---
+
+<!-- Hero Section -->
+<section class="min-h-[85vh] sm:min-h-[90vh] flex items-center">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <p class="font-mono text-xs uppercase tracking-widest text-gray-400 mb-4 sm:mb-6">Early Stage · Multi-Sector</p>
+
+    <h1 class="font-sans font-light tracking-tighter text-3xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 max-w-4xl text-gray-900" style="line-height: 0.95;">
+      Venture capital for<br>
+      creators and builders at<br>
+      the technology frontier
+    </h1>
+
+    <p class="text-base sm:text-lg md:text-xl text-gray-500 max-w-xl mb-8 sm:mb-12 leading-relaxed">
+      We back technical founders at the earliest stages, partnering on infrastructure the world will rely on for decades.
+    </p>
+
+    <!-- Sector list -->
+    <div class="flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-2">
+      {% for sector in site.sectors %}
+      <span class="text-xs sm:text-sm font-mono font-medium" style="color: {{ sector.color }}">{{ sector.name | lower }}</span>
+      {% if not loop.last %}<span class="text-gray-300">·</span>{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio Preview -->
+<section class="py-16 sm:py-24 border-t border-black/10">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-8 sm:mb-12">
+      <p class="font-mono text-xs uppercase tracking-widest text-gray-400">Portfolio</p>
+      <a href="/portfolio/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">View all →</a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      {% for company in portfolio %}
+      <a href="{{ company.url or '#' }}"
+         class="group p-4 sm:p-6 rounded-lg border border-black/10 hover:border-black/20 bg-gray-50 transition-all"
+         {% if company.url %}target="_blank" rel="noopener"{% endif %}>
+        <span class="font-mono text-xs font-medium" style="color: {{ company.color }}">{{ company.code }}</span>
+        <h3 class="font-sans font-black uppercase tracking-tight text-xl sm:text-2xl mt-2 sm:mt-3 group-hover:translate-x-1 transition-transform text-gray-900" style="letter-spacing: -0.03em;">{{ company.name }}</h3>
+        <p class="text-xs sm:text-sm text-gray-500 mt-2 line-clamp-2">{{ company.description }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Thesis Preview -->
+<section class="py-16 sm:py-24 border-t border-black/10">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-8 sm:gap-16">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-gray-400 mb-4 sm:mb-6">Our Approach</p>
+        <h2 class="font-sans font-light tracking-tighter text-2xl sm:text-3xl md:text-4xl mb-4 sm:mb-6 text-gray-900" style="line-height: 0.95;">
+          Systematic capital<br>deployment
+        </h2>
+      </div>
+      <div>
+        <p class="text-gray-500 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+          We invest in technical founders building foundational infrastructure across AI, crypto, defense, education, energy, and health. Our focus is on the earliest stages—pre-seed through Series A—where conviction matters more than consensus.
+        </p>
+        <p class="text-gray-500 leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">
+          We look for founders with deep technical expertise, clear insight into an underserved market, and the tenacity to build something that will outlast market cycles.
+        </p>
+        <a href="/thesis/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Read our thesis →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison Banner -->
+<section class="py-8 border-t border-black/10 bg-gray-100">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <p class="text-sm text-gray-500">
+      This is the light mode version for comparison.
+      <a href="/" class="text-indigo-500 hover:text-indigo-600 font-medium">View dark mode →</a>
+    </p>
+  </div>
+</section>
