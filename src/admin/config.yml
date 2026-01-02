@@ -34,8 +34,8 @@ collections:
                   - { label: "Crypto", value: "Crypto" }
                   - { label: "Defense", value: "Defense" }
                   - { label: "Energy", value: "Energy" }
-                  - { label: "Fund of Funds", value: "Fund of Funds" }
                   - { label: "Health", value: "Health" }
+                  - { label: "Fund of Funds", value: "Fund of Funds" }
               - { label: "Sector Code", name: "code", widget: "string", required: false, hint: "2-3 letter code (e.g. AI, CRY, DEF)" }
               - { label: "Description", name: "description", widget: "text", required: true }
               - { label: "Website URL", name: "url", widget: "string", required: false }

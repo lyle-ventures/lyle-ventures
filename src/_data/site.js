@@ -7,7 +7,7 @@ module.exports = {
     { name: "Crypto", code: "CRY", color: "#9B5DE5" },
     { name: "Defense", code: "DEF", color: "#E63956" },
     { name: "Energy", code: "NRG", color: "#00C46A" },
-    { name: "Fund of Funds", code: "FOF", color: "#7C8A99" },
-    { name: "Health", code: "BIO", color: "#E5A500" }
+    { name: "Health", code: "BIO", color: "#E5A500" },
+    { name: "Fund of Funds", code: "FOF", color: "#9CA3AF", deemphasized: true }
   ]
 };

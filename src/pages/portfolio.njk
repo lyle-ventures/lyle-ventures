@@ -1,7 +1,7 @@
 ---
 layout: layouts/base.njk
 title: Portfolio
-description: Companies we've backed across AI, crypto, defense, education, energy, and health.
+description: Companies we've backed across AI, crypto, defense, energy, and health.
 permalink: /portfolio/
 ---
 
@@ -19,7 +19,7 @@ permalink: /portfolio/
     <div class="flex flex-wrap gap-3 mb-12">
       <button onclick="filterSector('all')" data-sector="all" class="sector-btn px-4 py-2 rounded-full bg-gray-900 text-white text-xs font-bold uppercase tracking-wider transition-all">All</button>
       {% for sector in site.sectors %}
-      <button onclick="filterSector('{{ sector.name }}')" data-sector="{{ sector.name }}" class="sector-btn px-4 py-2 rounded-full border border-black/20 text-xs font-bold uppercase tracking-wider text-gray-500 hover:border-black/40 transition-all">{{ sector.name }}</button>
+      <button onclick="filterSector('{{ sector.name }}')" data-sector="{{ sector.name }}" class="sector-btn px-4 py-2 rounded-full border text-xs font-bold uppercase tracking-wider transition-all {% if sector.deemphasized %}border-black/10 text-gray-400 hover:border-black/20{% else %}border-black/20 text-gray-500 hover:border-black/40{% endif %}">{{ sector.name }}</button>
       {% endfor %}
     </div>
 
