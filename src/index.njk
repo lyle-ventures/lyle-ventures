@@ -39,9 +39,16 @@ title: Home
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
       {% for company in portfolio %}
       <a href="{{ company.url or '#' }}"
-         class="group p-4 sm:p-6 rounded-lg border border-black/10 hover:border-black/20 bg-gray-50 transition-all"
+         class="group p-4 sm:p-6 rounded-lg border border-black/10 hover:border-black/20 bg-gray-50 transition-all {% if not company.url %}cursor-default{% endif %}"
          {% if company.url %}target="_blank" rel="noopener"{% endif %}>
-        <span class="font-mono text-xs font-medium" style="color: {{ company.color }}">{{ company.code }}</span>
+        <div class="flex items-start justify-between mb-2">
+          {% if company.logo %}
+          <div class="w-10 h-10 rounded-md overflow-hidden bg-white border border-black/10 flex-shrink-0">
+            <img src="{{ company.logo }}" alt="{{ company.name }} logo" class="w-full h-full object-contain p-1">
+          </div>
+          {% endif %}
+          <span class="font-mono text-xs font-medium" style="color: {{ company.color }}">{{ company.code }}</span>
+        </div>
         <h3 class="font-sans font-black uppercase tracking-tight text-xl sm:text-2xl mt-2 sm:mt-3 group-hover:translate-x-1 transition-transform text-gray-900" style="letter-spacing: -0.03em;">{{ company.name }}</h3>
         <p class="text-xs sm:text-sm text-gray-500 mt-2 line-clamp-2">{{ company.description }}</p>
       </a>
