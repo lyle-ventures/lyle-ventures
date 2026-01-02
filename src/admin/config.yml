@@ -1,0 +1,42 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Store uploaded images in the portfolio folder
+media_folder: "portfolio"
+public_folder: "/portfolio"
+
+# Site URL for previews
+site_url: https://funny-creponne-1e71c1.netlify.app
+
+collections:
+  - name: "settings"
+    label: "Settings"
+    files:
+      - label: "Portfolio Companies"
+        name: "portfolio"
+        file: "src/_data/portfolio.json"
+        fields:
+          - label: "Companies"
+            name: "companies"
+            widget: "list"
+            allow_add: true
+            collapsed: false
+            summary: "{{fields.name}} ({{fields.sector}})"
+            fields:
+              - { label: "Company Name", name: "name", widget: "string", required: true }
+              - label: "Sector"
+                name: "sector"
+                widget: "select"
+                required: true
+                options:
+                  - { label: "AI", value: "AI" }
+                  - { label: "Crypto", value: "Crypto" }
+                  - { label: "Defense", value: "Defense" }
+                  - { label: "Education", value: "Education" }
+                  - { label: "Energy", value: "Energy" }
+                  - { label: "Biomedical", value: "Biomedical" }
+              - { label: "Sector Code", name: "code", widget: "string", required: false, hint: "2-3 letter code (e.g. AI, CRY, DEF)" }
+              - { label: "Description", name: "description", widget: "text", required: true }
+              - { label: "Website URL", name: "url", widget: "string", required: false }
+              - { label: "Logo", name: "logo", widget: "image", required: false }

@@ -4,6 +4,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/llms.txt");
   eleventyConfig.addPassthroughCopy({ "logos": "logos" });
   eleventyConfig.addPassthroughCopy({ "portfolio": "portfolio" });
+  eleventyConfig.addPassthroughCopy("src/admin");
 
   return {
     dir: {

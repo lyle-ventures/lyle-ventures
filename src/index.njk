@@ -37,7 +37,7 @@ title: Home
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-      {% for company in portfolio %}
+      {% for company in portfolio.companies %}
       <a href="{{ company.url or '#' }}"
          class="group p-4 sm:p-6 rounded-lg border border-black/10 hover:border-black/20 bg-gray-50 transition-all {% if not company.url %}cursor-default{% endif %}"
          {% if company.url %}target="_blank" rel="noopener"{% endif %}>

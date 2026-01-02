@@ -36,6 +36,9 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/output.css">
 
+  <!-- Netlify Identity (for CMS) -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
   <!-- Structured Data -->
   <script type="application/ld+json">
   {
@@ -149,6 +152,19 @@
       menu.classList.toggle('hidden');
       menuIcon.classList.toggle('hidden');
       closeIcon.classList.toggle('hidden');
+    }
+  </script>
+
+  <!-- Netlify Identity redirect -->
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
     }
   </script>
 </body>
