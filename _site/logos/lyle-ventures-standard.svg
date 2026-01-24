@@ -1,0 +1,10 @@
+<svg width="200" height="40" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Box with LV -->
+  <rect x="4.75" y="4.75" width="30.5" height="30.5" fill="none" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="20" y="25" fill="#6366f1" font-size="15" font-family="Inter" font-weight="600" text-anchor="middle" letter-spacing="0.02em">LV</text>
+  
+  <!-- Wordmark: Lyle.Ventures with tight dot -->
+  <text font-family="Inter" font-size="18" font-weight="500" letter-spacing="-0.025em">
+    <tspan x="45" y="26" fill="#111827">Lyle</tspan><tspan fill="#6366f1" dx="0.02em" style="font-size:125%">.</tspan><tspan fill="#111827" dx="-0.1em">Ventures</tspan>
+  </text>
+</svg>

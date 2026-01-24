@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Investment Opus | Universe | Lyle Ventures</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/logos/lv-icon-indigo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/logos/lv-icon-indigo-256.png">
+
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/output.css">
+
+  <style>
+    .universe-bg { background: #0a0a0f; }
+    .universe-card { background: #12121a; border: 1px solid rgba(99, 102, 241, 0.2); }
+    .universe-nav { background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="universe-bg text-gray-100 min-h-screen">
+  <!-- Login Gate -->
+  <div id="auth-gate" class="fixed inset-0 universe-bg z-[100] flex items-center justify-center">
+    <div class="w-full max-w-sm px-6">
+      <div class="text-center mb-8">
+        <div class="w-12 h-12 border-[1.5px] border-indigo-500 flex items-center justify-center mx-auto mb-4">
+          <span class="text-lg font-semibold tracking-wide text-indigo-500">LV</span>
+        </div>
+        <h1 class="text-xl font-semibold text-gray-100">Universe</h1>
+        <p class="text-gray-500 text-sm mt-1">Internal access only</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <input type="text" id="username-input" placeholder="Username" autocomplete="username"
+          class="w-full bg-gray-900/50 border border-indigo-500/30 rounded-lg px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors">
+        <input type="password" id="password-input" placeholder="Password" autocomplete="current-password"
+          class="w-full bg-gray-900/50 border border-indigo-500/30 rounded-lg px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors">
+        <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+          Enter
+        </button>
+        <p id="error-msg" class="text-red-400 text-sm text-center hidden">Incorrect username or password</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-indigo-500/20 universe-nav safe-area-inset">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14 sm:h-16">
+        <!-- Logo -->
+        <a href="/universe/" class="flex items-center gap-2 sm:gap-2.5">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 border-[1.5px] border-indigo-500 flex items-center justify-center">
+            <span class="text-[11px] sm:text-[13px] font-semibold tracking-wide text-indigo-500">LV</span>
+          </div>
+          <span class="text-base sm:text-lg font-semibold tracking-tight text-gray-100">Universe</span>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <div class="hidden sm:flex items-center gap-6 lg:gap-8">
+          <a href="/universe/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors ">Dashboard</a>
+          <a href="/universe/opus/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors text-indigo-400">Opus</a>
+          <a href="/universe/btc-sine/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors ">Sine</a>
+          <a href="/universe/macro/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors ">Macro</a>
+          <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-red-400 transition-colors">Logout</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="sm:hidden p-2 -mr-2 text-gray-400" onclick="toggleMobileMenu()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+            <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden sm:hidden border-t border-indigo-500/20 universe-bg">
+      <div class="px-4 py-4 space-y-3">
+        <a href="/universe/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Dashboard</a>
+        <a href="/universe/opus/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Investment Opus</a>
+        <a href="/universe/btc-sine/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">BTC Sine Model</a>
+        <a href="/universe/macro/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Macro Dashboard</a>
+        <a href="/universe/valuation-calc/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Valuation Calculator</a>
+        <button onclick="logout()" class="block py-2 text-lg text-red-400 hover:text-red-300 text-left w-full">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-14 sm:pt-16 min-h-screen">
+    
+
+
+<div id="opus-app" class="min-h-screen">
+  <!-- Header Stats Bar -->
+  <div class="border-b border-indigo-500/20 bg-gray-900/50">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 class="text-xl font-semibold text-gray-100">The Exponential Age Investment Opus</h1>
+          <p class="text-xs text-gray-500 mt-1">Peak: <span id="peak-date">December 1, 2026</span> | Days: <span id="days-to-peak">--</span></p>
+        </div>
+        <div class="flex flex-wrap gap-4 sm:gap-6">
+          <div class="text-center">
+            <p class="text-xs uppercase tracking-wider text-gray-500">BTC</p>
+            <p id="btc-price" class="text-lg font-semibold text-gray-100">$--</p>
+          </div>
+          <div class="text-center">
+            <p class="text-xs uppercase tracking-wider text-gray-500">Actual σ</p>
+            <p id="actual-sigma" class="text-lg font-semibold text-indigo-400">--</p>
+          </div>
+          <div class="text-center">
+            <p class="text-xs uppercase tracking-wider text-gray-500">Expected σ</p>
+            <p id="expected-sigma" class="text-lg font-semibold text-gray-400">--</p>
+          </div>
+          <div class="text-center">
+            <p class="text-xs uppercase tracking-wider text-gray-500">Mispricing</p>
+            <p id="mispricing" class="text-lg font-semibold text-green-400">--</p>
+          </div>
+          <div class="text-center">
+            <p class="text-xs uppercase tracking-wider text-gray-500">Phase</p>
+            <p id="current-phase" class="text-lg font-semibold text-yellow-400">--</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Grid -->
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left Column: Projections & Model -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- Projection Table -->
+        <div class="universe-card rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400">Projection Table</h2>
+            <span class="text-xs text-gray-500">Auto-calculated from model</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="text-left py-2 text-gray-500 font-medium">Date</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">Baseline</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">Sine</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">Exp σ</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">Expected</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">+1.0σ</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">+1.5σ</th>
+                  <th class="text-right py-2 text-gray-500 font-medium">+2.0σ</th>
+                </tr>
+              </thead>
+              <tbody id="projection-table-body">
+                <tr><td colspan="8" class="py-4 text-center text-gray-500">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Exit Strategy Tracker -->
+        <div class="universe-card rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400">Exit Strategy Tracker</h2>
+            <span class="text-xs text-gray-500">σ-based tranches</span>
+          </div>
+          <div class="space-y-4">
+            <!-- Exit Tranches -->
+            <div class="p-4 rounded bg-gray-900/50">
+              <h3 class="font-semibold text-gray-200 mb-3">BTC/IBIT Exit Levels</h3>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Trim 10% @ +0.8σ</span>
+                  <span id="exit-08" class="text-gray-300 font-mono">$--</span>
+                  <span class="text-gray-500">⬜ Pending</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Sell 25% @ +1.0σ</span>
+                  <span id="exit-10" class="text-gray-300 font-mono">$--</span>
+                  <span class="text-gray-500">⬜ Pending</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Sell 30% @ +1.3σ</span>
+                  <span id="exit-13" class="text-gray-300 font-mono">$--</span>
+                  <span class="text-gray-500">⬜ Pending</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Sell 25% @ +1.5σ (Peak)</span>
+                  <span id="exit-15" class="text-gray-300 font-mono">$--</span>
+                  <span class="text-gray-500">⬜ Pending</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400">Exit Rest @ +2.0σ</span>
+                  <span id="exit-20" class="text-gray-300 font-mono">$--</span>
+                  <span class="text-gray-500">⬜ Pending</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500">Exit by σ, not by price. Levels recalculate daily as baseline rises.</p>
+          </div>
+        </div>
+
+        <!-- Position Targets -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Phase 1 Position Targets</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="text-left py-2 text-gray-500">Category</th>
+                  <th class="text-right py-2 text-gray-500">Target Range</th>
+                  <th class="text-right py-2 text-gray-500">Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-gray-800/50">
+                  <td class="py-2 text-gray-300">Crypto (IBIT, COIN, SBET, Miners)</td>
+                  <td class="py-2 text-right text-indigo-400">50-60%</td>
+                  <td class="py-2 text-right text-gray-400">Maintain</td>
+                </tr>
+                <tr class="border-b border-gray-800/50">
+                  <td class="py-2 text-gray-300">Quality Tech (GOOGL, META, etc.)</td>
+                  <td class="py-2 text-right text-indigo-400">20-25%</td>
+                  <td class="py-2 text-right text-yellow-400">Build</td>
+                </tr>
+                <tr class="border-b border-gray-800/50">
+                  <td class="py-2 text-gray-300">Converters (COPX, FCX, TSM, VRT)</td>
+                  <td class="py-2 text-right text-indigo-400">10-15%</td>
+                  <td class="py-2 text-right text-yellow-400">Build</td>
+                </tr>
+                <tr class="border-b border-gray-800/50">
+                  <td class="py-2 text-gray-300">Cash</td>
+                  <td class="py-2 text-right text-indigo-400">5-10%</td>
+                  <td class="py-2 text-right text-gray-400">Maintain</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Status & Info -->
+      <div class="space-y-6">
+
+        <!-- BTC Price Input -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">BTC Price</h2>
+          <div class="space-y-3">
+            <input type="number" id="btc-input" value="89500" class="w-full bg-gray-900/50 border border-indigo-500/30 rounded px-4 py-3 text-gray-100 text-lg font-mono focus:outline-none focus:border-indigo-500">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="Opus.updatePrice()" class="py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded text-sm transition-colors">
+                Update
+              </button>
+              <button onclick="Opus.fetchLive()" class="py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-300 rounded text-sm transition-colors">
+                Fetch Live
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Status -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Current Status</h2>
+          <div class="space-y-4">
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Zone</p>
+              <p id="current-zone" class="text-xl font-bold text-green-400">ACCUMULATE</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Cycle Progress</p>
+              <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div id="cycle-bar" class="h-full bg-indigo-500 transition-all" style="width: 75%"></div>
+              </div>
+              <p id="cycle-text" class="text-xs text-gray-400 mt-1">Day -- of --</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- σ Price Levels -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">σ Levels (Today)</h2>
+          <div class="space-y-2 text-sm" id="sigma-levels">
+            <div class="flex justify-between">
+              <span class="text-red-400">-2.0σ</span>
+              <span id="s-m2" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-orange-400">-1.0σ</span>
+              <span id="s-m1" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">0σ (Baseline)</span>
+              <span id="s-0" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-green-400">+0.8σ</span>
+              <span id="s-08" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-green-400">+1.0σ</span>
+              <span id="s-10" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-blue-400">+1.3σ</span>
+              <span id="s-13" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-indigo-400">+1.5σ (Peak)</span>
+              <span id="s-15" class="text-gray-300 font-mono">$--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-purple-400">+2.0σ</span>
+              <span id="s-20" class="text-gray-300 font-mono">$--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mantras -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Mantras</h2>
+          <div class="space-y-3 text-sm text-gray-400 italic">
+            <p>"BTC is massively mispriced. The snap-back will be violent."</p>
+            <p>"Exit by σ, not by price."</p>
+            <p>"Early is okay. Late is fatal."</p>
+            <p>"Process over emotion, always."</p>
+          </div>
+        </div>
+
+        <!-- Meta -->
+        <div class="text-xs text-gray-600 text-center">
+          <p>Strategy adjustments via Claude Code</p>
+          <p>Last updated: Jan 24, 2026</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// MODEL PARAMETERS (Architectural Constants)
+// Change these in Claude Code sessions, not here
+// ============================================================================
+const MODEL = {
+  genesis: new Date('2009-01-03'),
+  cycleBottom: new Date('2022-11-21'),
+  cyclePeak: new Date('2026-12-01'),
+  logA: -23.3,
+  logB: 7.5,
+  logStd: 0.095,
+  bottomSigma: -3.0,
+  peakSigma: 1.5
+};
+
+// ============================================================================
+// OPUS APP
+// ============================================================================
+const Opus = {
+  btcPrice: 89500,
+
+  init() {
+    this.calculate();
+  },
+
+  updatePrice() {
+    const price = parseFloat(document.getElementById('btc-input').value);
+    if (price > 0) {
+      this.btcPrice = price;
+      this.calculate();
+    }
+  },
+
+  async fetchLive() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      const data = await res.json();
+      if (data.bitcoin?.usd) {
+        this.btcPrice = data.bitcoin.usd;
+        document.getElementById('btc-input').value = this.btcPrice;
+        this.calculate();
+      }
+    } catch (e) {
+      alert('Failed to fetch. Enter manually.');
+    }
+  },
+
+  calculate() {
+    const today = new Date();
+    const p = MODEL;
+
+    // Days
+    const daysSinceGenesis = Math.floor((today - p.genesis) / 86400000);
+    const daysSinceBottom = Math.floor((today - p.cycleBottom) / 86400000);
+    const daysInCycle = Math.floor((p.cyclePeak - p.cycleBottom) / 86400000);
+    const daysToPeak = Math.floor((p.cyclePeak - today) / 86400000);
+
+    // Baseline
+    const logBaseline = p.logA + p.logB * Math.log10(daysSinceGenesis);
+    const baseline = Math.pow(10, logBaseline);
+
+    // Sine & expected σ
+    const sine = Math.sin(Math.PI * daysSinceBottom / daysInCycle - Math.PI / 2);
+    const t = (sine + 1) / 2;
+    const expectedSigma = p.bottomSigma + t * (p.peakSigma - p.bottomSigma);
+    const expectedPrice = baseline * Math.pow(10, expectedSigma * p.logStd);
+
+    // Actual σ
+    const actualSigma = (Math.log10(this.btcPrice) - logBaseline) / p.logStd;
+    const mispricing = ((this.btcPrice - expectedPrice) / expectedPrice) * 100;
+
+    // σ levels
+    const sigma = (s) => baseline * Math.pow(10, s * p.logStd);
+
+    // Phase & zone
+    let phase, zone;
+    if (sine >= 0.87) { phase = 'Euphoria'; zone = 'SELL'; }
+    else if (sine >= 0.71) { phase = 'Thrill'; zone = 'START SELLING'; }
+    else if (sine >= 0.50) { phase = 'Belief'; zone = 'HOLD'; }
+    else if (sine >= 0.00) { phase = 'Optimism'; zone = 'HOLD'; }
+    else if (sine >= -0.50) { phase = 'Hope'; zone = 'ACCUMULATE'; }
+    else { phase = 'Disbelief'; zone = 'ACCUMULATE'; }
+
+    // Update UI
+    const fmt = (n) => '$' + Math.round(n).toLocaleString();
+
+    document.getElementById('days-to-peak').textContent = daysToPeak;
+    document.getElementById('btc-price').textContent = fmt(this.btcPrice);
+    document.getElementById('actual-sigma').textContent = actualSigma.toFixed(2) + 'σ';
+    document.getElementById('expected-sigma').textContent = expectedSigma.toFixed(2) + 'σ';
+    document.getElementById('mispricing').textContent = (mispricing >= 0 ? '+' : '') + mispricing.toFixed(1) + '%';
+    document.getElementById('mispricing').className = 'text-lg font-semibold ' + (mispricing < 0 ? 'text-green-400' : 'text-red-400');
+    document.getElementById('current-phase').textContent = phase;
+    document.getElementById('current-zone').textContent = zone;
+
+    // σ levels
+    document.getElementById('s-m2').textContent = fmt(sigma(-2));
+    document.getElementById('s-m1').textContent = fmt(sigma(-1));
+    document.getElementById('s-0').textContent = fmt(baseline);
+    document.getElementById('s-08').textContent = fmt(sigma(0.8));
+    document.getElementById('s-10').textContent = fmt(sigma(1.0));
+    document.getElementById('s-13').textContent = fmt(sigma(1.3));
+    document.getElementById('s-15').textContent = fmt(sigma(1.5));
+    document.getElementById('s-20').textContent = fmt(sigma(2.0));
+
+    // Exit levels
+    document.getElementById('exit-08').textContent = fmt(sigma(0.8));
+    document.getElementById('exit-10').textContent = fmt(sigma(1.0));
+    document.getElementById('exit-13').textContent = fmt(sigma(1.3));
+    document.getElementById('exit-15').textContent = fmt(sigma(1.5));
+    document.getElementById('exit-20').textContent = fmt(sigma(2.0));
+
+    // Cycle progress
+    const pct = Math.min(100, (daysSinceBottom / daysInCycle) * 100);
+    document.getElementById('cycle-bar').style.width = pct + '%';
+    document.getElementById('cycle-text').textContent = `Day ${daysSinceBottom} of ${daysInCycle}`;
+
+    // Projection table
+    this.updateProjectionTable(today, p.cyclePeak, baseline, daysInCycle);
+  },
+
+  updateProjectionTable(start, end, baseline, daysInCycle) {
+    const rows = [];
+    let current = new Date(start);
+    let i = 0;
+
+    while (current <= end && i < 14) {
+      const daysSinceBottom = Math.floor((current - MODEL.cycleBottom) / 86400000);
+      const daysSinceGenesis = Math.floor((current - MODEL.genesis) / 86400000);
+      const logB = MODEL.logA + MODEL.logB * Math.log10(daysSinceGenesis);
+      const base = Math.pow(10, logB);
+      const sine = Math.sin(Math.PI * daysSinceBottom / daysInCycle - Math.PI / 2);
+      const t = (sine + 1) / 2;
+      const expS = MODEL.bottomSigma + t * (MODEL.peakSigma - MODEL.bottomSigma);
+      const expP = base * Math.pow(10, expS * MODEL.logStd);
+      const s10 = base * Math.pow(10, 1.0 * MODEL.logStd);
+      const s15 = base * Math.pow(10, 1.5 * MODEL.logStd);
+      const s20 = base * Math.pow(10, 2.0 * MODEL.logStd);
+
+      const label = i === 0 ? 'TODAY' : current.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      const cls = i === 0 ? 'bg-indigo-500/10 font-semibold' : '';
+
+      rows.push(`<tr class="${cls} border-b border-gray-800/50">
+        <td class="py-2 text-gray-${i === 0 ? '100' : '300'}">${label}</td>
+        <td class="py-2 text-right text-gray-400">$${Math.round(base/1000)}K</td>
+        <td class="py-2 text-right text-gray-400">${sine.toFixed(3)}</td>
+        <td class="py-2 text-right text-indigo-400">${expS.toFixed(2)}σ</td>
+        <td class="py-2 text-right text-gray-100">$${Math.round(expP/1000)}K</td>
+        <td class="py-2 text-right text-green-400">$${Math.round(s10/1000)}K</td>
+        <td class="py-2 text-right text-blue-400">$${Math.round(s15/1000)}K</td>
+        <td class="py-2 text-right text-purple-400">$${Math.round(s20/1000)}K</td>
+      </tr>`);
+
+      current = new Date(current.getFullYear(), current.getMonth() + 1, current.getDate());
+      i++;
+    }
+
+    document.getElementById('projection-table-body').innerHTML = rows.join('');
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => Opus.init());
+</script>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-indigo-500/20 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="text-center">
+        <p class="text-xs text-gray-500">Internal use only. Not for distribution.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    const UNIVERSE_USERNAME = 'ethanlyle';
+    const UNIVERSE_PASSWORD = 'vn43nwvughsn4$GW';
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const authGate = document.getElementById('auth-gate');
+
+      // Check if already authenticated this session
+      if (sessionStorage.getItem('universe_auth') === 'true') {
+        authGate.style.display = 'none';
+      }
+
+      // Handle login form
+      document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username-input').value;
+        const password = document.getElementById('password-input').value;
+
+        if (username === UNIVERSE_USERNAME && password === UNIVERSE_PASSWORD) {
+          sessionStorage.setItem('universe_auth', 'true');
+          authGate.style.display = 'none';
+        } else {
+          document.getElementById('error-msg').classList.remove('hidden');
+          document.getElementById('password-input').value = '';
+        }
+      });
+    });
+
+    function logout() {
+      sessionStorage.removeItem('universe_auth');
+      window.location.href = '/';
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+
+      menu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>

@@ -266,7 +266,7 @@ permalink: /universe/btc-sine/
 // ============================================================================
 
 const SineApp = {
-  // Model parameters
+  // Model parameters (adjust in Claude Code sessions)
   params: {
     genesis: new Date('2009-01-03'),
     logA: -23.3,
@@ -279,37 +279,22 @@ const SineApp = {
     peakStdDev: 1.5
   },
 
-  state: {
-    btcPrice: 89500,
-    extended: false
-  },
+  btcPrice: 89500,
+  extended: false,
 
   init() {
-    // Load saved state
-    const saved = localStorage.getItem('sine_app_state');
-    if (saved) {
-      this.state = { ...this.state, ...JSON.parse(saved) };
-      document.getElementById('price-input').value = this.state.btcPrice;
-      document.getElementById('extended-toggle').checked = this.state.extended;
-    }
     this.calculate();
   },
 
-  saveState() {
-    localStorage.setItem('sine_app_state', JSON.stringify(this.state));
-  },
-
   toggleExtended() {
-    this.state.extended = document.getElementById('extended-toggle').checked;
-    this.saveState();
+    this.extended = document.getElementById('extended-toggle').checked;
     this.calculate();
   },
 
   updatePrice() {
     const price = parseFloat(document.getElementById('price-input').value);
     if (price > 0) {
-      this.state.btcPrice = price;
-      this.saveState();
+      this.btcPrice = price;
       this.calculate();
     }
   },
@@ -319,9 +304,8 @@ const SineApp = {
       const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
       const data = await res.json();
       if (data.bitcoin?.usd) {
-        this.state.btcPrice = data.bitcoin.usd;
-        document.getElementById('price-input').value = this.state.btcPrice;
-        this.saveState();
+        this.btcPrice = data.bitcoin.usd;
+        document.getElementById('price-input').value = this.btcPrice;
         this.calculate();
       }
     } catch (e) {
@@ -330,7 +314,7 @@ const SineApp = {
   },
 
   getPeakDate() {
-    return this.state.extended ? this.params.peakDateExtended : this.params.peakDate;
+    return this.extended ? this.params.peakDateExtended : this.params.peakDate;
   },
 
   getDaysInCycle() {
@@ -340,7 +324,7 @@ const SineApp = {
   calculate() {
     const p = this.params;
     const today = new Date();
-    const price = this.state.btcPrice;
+    const price = this.btcPrice;
 
     // Days calculations
     const daysSinceGenesis = Math.floor((today - p.genesis) / 86400000);
@@ -485,8 +469,8 @@ const SineApp = {
     document.getElementById('entry-3').textContent = fmt(data.expectedPrice * (1 - data.entries[2].pct));
 
     // Peak label
-    document.getElementById('peak-label').textContent = this.state.extended ? 'Peak (Nov 2026)' : 'Peak (Aug 2026)';
-    document.getElementById('param-peak').textContent = this.state.extended ? 'Nov 15, 2026' : 'Aug 15, 2026';
+    document.getElementById('peak-label').textContent = this.extended ? 'Peak (Nov 2026)' : 'Peak (Aug 2026)';
+    document.getElementById('param-peak').textContent = this.extended ? 'Nov 15, 2026' : 'Aug 15, 2026';
   }
 };
 

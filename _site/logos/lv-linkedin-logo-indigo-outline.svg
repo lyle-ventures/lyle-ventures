@@ -1,0 +1,5 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="white"/>
+  <rect x="4" y="4" width="292" height="292" fill="none" stroke="#6366f1" stroke-width="8"/>
+  <text x="150" y="195" fill="#6366f1" font-size="130" font-family="Inter" font-weight="600" text-anchor="middle" letter-spacing="0.03em">LV</text>
+</svg>

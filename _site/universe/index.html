@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Dashboard | Universe | Lyle Ventures</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/logos/lv-icon-indigo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/logos/lv-icon-indigo-256.png">
+
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/output.css">
+
+  <style>
+    .universe-bg { background: #0a0a0f; }
+    .universe-card { background: #12121a; border: 1px solid rgba(99, 102, 241, 0.2); }
+    .universe-nav { background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="universe-bg text-gray-100 min-h-screen">
+  <!-- Login Gate -->
+  <div id="auth-gate" class="fixed inset-0 universe-bg z-[100] flex items-center justify-center">
+    <div class="w-full max-w-sm px-6">
+      <div class="text-center mb-8">
+        <div class="w-12 h-12 border-[1.5px] border-indigo-500 flex items-center justify-center mx-auto mb-4">
+          <span class="text-lg font-semibold tracking-wide text-indigo-500">LV</span>
+        </div>
+        <h1 class="text-xl font-semibold text-gray-100">Universe</h1>
+        <p class="text-gray-500 text-sm mt-1">Internal access only</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <input type="text" id="username-input" placeholder="Username" autocomplete="username"
+          class="w-full bg-gray-900/50 border border-indigo-500/30 rounded-lg px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors">
+        <input type="password" id="password-input" placeholder="Password" autocomplete="current-password"
+          class="w-full bg-gray-900/50 border border-indigo-500/30 rounded-lg px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors">
+        <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+          Enter
+        </button>
+        <p id="error-msg" class="text-red-400 text-sm text-center hidden">Incorrect username or password</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-indigo-500/20 universe-nav safe-area-inset">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14 sm:h-16">
+        <!-- Logo -->
+        <a href="/universe/" class="flex items-center gap-2 sm:gap-2.5">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 border-[1.5px] border-indigo-500 flex items-center justify-center">
+            <span class="text-[11px] sm:text-[13px] font-semibold tracking-wide text-indigo-500">LV</span>
+          </div>
+          <span class="text-base sm:text-lg font-semibold tracking-tight text-gray-100">Universe</span>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <div class="hidden sm:flex items-center gap-6 lg:gap-8">
+          <a href="/universe/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors text-indigo-400">Dashboard</a>
+          <a href="/universe/opus/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors ">Opus</a>
+          <a href="/universe/btc-sine/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors ">Sine</a>
+          <a href="/universe/macro/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors ">Macro</a>
+          <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-red-400 transition-colors">Logout</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="sm:hidden p-2 -mr-2 text-gray-400" onclick="toggleMobileMenu()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+            <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden sm:hidden border-t border-indigo-500/20 universe-bg">
+      <div class="px-4 py-4 space-y-3">
+        <a href="/universe/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Dashboard</a>
+        <a href="/universe/opus/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Investment Opus</a>
+        <a href="/universe/btc-sine/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">BTC Sine Model</a>
+        <a href="/universe/macro/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Macro Dashboard</a>
+        <a href="/universe/valuation-calc/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Valuation Calculator</a>
+        <button onclick="logout()" class="block py-2 text-lg text-red-400 hover:text-red-300 text-left w-full">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-14 sm:pt-16 min-h-screen">
+    
+<section class="py-12 sm:py-16 lg:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-12">
+      <p class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">Internal Tools</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-light uppercase tracking-tight text-gray-100 mb-4">
+        The Universe
+      </h1>
+      <p class="text-lg text-gray-400 max-w-2xl">
+        Research and analysis tools for investment decisions.
+      </p>
+    </div>
+
+    <!-- Tools Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Investment Opus -->
+      <a href="/universe/opus/" class="universe-card rounded-lg p-6 hover:border-indigo-500/50 transition-all group md:col-span-2 lg:col-span-1">
+        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-100 mb-2">Investment Opus</h3>
+        <p class="text-sm text-gray-400">BTC sine model, portfolio tracking, exit strategy, and projection tables.</p>
+      </a>
+
+      <!-- BTC Sine Model -->
+      <a href="/universe/btc-sine/" class="universe-card rounded-lg p-6 hover:border-indigo-500/50 transition-all group">
+        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-100 mb-2">BTC Sine Model</h3>
+        <p class="text-sm text-gray-400">Cycle timing model with log regression baseline and sine-wave deviation.</p>
+      </a>
+
+      <!-- Macro Dashboard -->
+      <a href="/universe/macro/" class="universe-card rounded-lg p-6 hover:border-indigo-500/50 transition-all group">
+        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-100 mb-2">Macro Dashboard</h3>
+        <p class="text-sm text-gray-400">Multi-indicator cycle assessment using FRED data and GMI/Bittel framework.</p>
+      </a>
+
+      <!-- Valuation Calculator -->
+      <a href="/universe/valuation-calc/" class="universe-card rounded-lg p-6 hover:border-indigo-500/50 transition-all group">
+        <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-100 mb-2">Valuation Calculator</h3>
+        <p class="text-sm text-gray-400">Calculate ownership, dilution, and returns across funding rounds.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-indigo-500/20 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="text-center">
+        <p class="text-xs text-gray-500">Internal use only. Not for distribution.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    const UNIVERSE_USERNAME = 'ethanlyle';
+    const UNIVERSE_PASSWORD = 'vn43nwvughsn4$GW';
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const authGate = document.getElementById('auth-gate');
+
+      // Check if already authenticated this session
+      if (sessionStorage.getItem('universe_auth') === 'true') {
+        authGate.style.display = 'none';
+      }
+
+      // Handle login form
+      document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username-input').value;
+        const password = document.getElementById('password-input').value;
+
+        if (username === UNIVERSE_USERNAME && password === UNIVERSE_PASSWORD) {
+          sessionStorage.setItem('universe_auth', 'true');
+          authGate.style.display = 'none';
+        } else {
+          document.getElementById('error-msg').classList.remove('hidden');
+          document.getElementById('password-input').value = '';
+        }
+      });
+    });
+
+    function logout() {
+      sessionStorage.removeItem('universe_auth');
+      window.location.href = '/';
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+
+      menu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>

@@ -297,31 +297,19 @@ const MacroApp = {
     btcDiscount: 20
   },
 
-  // State
-  state: {
-    btcPrice: 89500,
-    data: null,
-    targetDate: null
-  },
+  // State (no persistence - adjust in Claude Code)
+  btcPrice: 89500,
+  data: null,
+  targetDate: null,
 
   init() {
-    const saved = localStorage.getItem('macro_app_state');
-    if (saved) {
-      this.state = { ...this.state, ...JSON.parse(saved) };
-      document.getElementById('btc-input').value = this.state.btcPrice;
-    }
     this.fetchData();
-  },
-
-  saveState() {
-    localStorage.setItem('macro_app_state', JSON.stringify(this.state));
   },
 
   updateBtc() {
     const price = parseFloat(document.getElementById('btc-input').value);
     if (price > 0) {
-      this.state.btcPrice = price;
-      this.saveState();
+      this.btcPrice = price;
       this.calculate();
     }
   },
@@ -329,15 +317,14 @@ const MacroApp = {
   loadPreset(key) {
     const preset = this.PRESETS[key];
     if (preset.date) {
-      this.state.targetDate = preset.date;
-      this.state.btcPrice = preset.btc;
+      this.targetDate = preset.date;
+      this.btcPrice = preset.btc;
       document.getElementById('btc-input').value = preset.btc;
       document.getElementById('data-status').textContent = 'Backtest: ' + preset.date;
     } else {
-      this.state.targetDate = null;
+      this.targetDate = null;
       document.getElementById('data-status').textContent = 'Live';
     }
-    this.saveState();
     this.fetchData();
   },
 
@@ -347,7 +334,7 @@ const MacroApp = {
 
     try {
       const data = {};
-      const endDate = this.state.targetDate || new Date().toISOString().split('T')[0];
+      const endDate = this.targetDate || new Date().toISOString().split('T')[0];
 
       // Fetch all series in parallel
       const fetches = Object.entries(this.SERIES).map(async ([id, name]) => {
@@ -370,23 +357,22 @@ const MacroApp = {
       await Promise.all(fetches);
 
       // Also fetch BTC if live mode
-      if (!this.state.targetDate) {
+      if (!this.targetDate) {
         try {
           const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
           const btcData = await btcRes.json();
           if (btcData.bitcoin?.usd) {
-            this.state.btcPrice = btcData.bitcoin.usd;
-            document.getElementById('btc-input').value = this.state.btcPrice;
+            this.btcPrice = btcData.bitcoin.usd;
+            document.getElementById('btc-input').value = this.btcPrice;
           }
         } catch (e) {
           console.warn('Failed to fetch BTC price');
         }
       }
 
-      this.state.data = data;
-      this.saveState();
-
-      document.getElementById('data-status').textContent = this.state.targetDate ? 'Backtest: ' + this.state.targetDate : 'Live';
+      this.data = data;
+      
+      document.getElementById('data-status').textContent = this.targetDate ? 'Backtest: ' + this.targetDate : 'Live';
       document.getElementById('data-status').className = 'text-green-400';
 
       this.calculate();
@@ -398,7 +384,7 @@ const MacroApp = {
   },
 
   calculate() {
-    const d = this.state.data;
+    const d = this.data;
     if (!d) return;
 
     const latest = (series) => d[series]?.[0]?.value || null;
@@ -439,7 +425,7 @@ const MacroApp = {
     const baseLiq = 5.95e12;
     const baseBtc = 90000;
     const btcFairValue = netLiq ? baseBtc * Math.pow(netLiq / baseLiq, 1.4) : null;
-    const btcDiscount = btcFairValue ? ((btcFairValue - this.state.btcPrice) / btcFairValue) * 100 : null;
+    const btcDiscount = btcFairValue ? ((btcFairValue - this.btcPrice) / btcFairValue) * 100 : null;
 
     // Calculate scores
     const scores = [];
