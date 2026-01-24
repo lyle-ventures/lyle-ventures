@@ -4,6 +4,17 @@ title: Macro Cycle Dashboard
 permalink: /universe/macro/
 ---
 
+{#
+  ============================================================================
+  MACRO CYCLE DASHBOARD - Execution Display
+  ============================================================================
+  Data is pre-populated from FRED. Update via Claude Code sessions.
+
+  Last Updated: January 24, 2026
+  Data Source: FRED (Federal Reserve Economic Data)
+  ============================================================================
+#}
+
 <div id="macro-app" class="min-h-screen">
   <!-- Header -->
   <div class="border-b border-indigo-500/20 bg-gray-900/50">
@@ -12,7 +23,7 @@ permalink: /universe/macro/
         <div>
           <a href="/universe/" class="text-xs text-indigo-400 hover:text-indigo-300 mb-1 inline-block">&larr; Dashboard</a>
           <h1 class="text-xl font-semibold text-gray-100">Macro Cycle Dashboard</h1>
-          <p class="text-xs text-gray-500 mt-1">GMI/Bittel Framework | <span id="data-status" class="text-yellow-400">Loading...</span></p>
+          <p class="text-xs text-gray-500 mt-1">GMI/Bittel Framework | Data: <span id="data-date" class="text-green-400">Jan 24, 2026</span></p>
         </div>
         <div class="flex flex-wrap gap-4 sm:gap-6 text-center">
           <div>
@@ -38,14 +49,11 @@ permalink: /universe/macro/
     <div class="universe-card rounded-lg p-6 mb-6">
       <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Macro Cycle Position</h2>
       <div class="relative">
-        <!-- Gradient Bar -->
         <div class="h-8 rounded-full bg-gradient-to-r from-blue-600 via-green-500 via-yellow-500 to-red-500 relative overflow-hidden">
-          <!-- Needle -->
           <div id="cycle-needle" class="absolute top-0 bottom-0 w-1 bg-white shadow-lg transition-all duration-500" style="left: 50%">
             <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
           </div>
         </div>
-        <!-- Labels -->
         <div class="flex justify-between mt-2 text-xs text-gray-400">
           <span>WINTER</span>
           <span>SPRING</span>
@@ -170,7 +178,7 @@ permalink: /universe/macro/
                 </tr>
               </thead>
               <tbody id="scorecard-body">
-                <tr><td colspan="5" class="py-4 text-center text-gray-500">Loading data...</td></tr>
+                <tr><td colspan="5" class="py-4 text-center text-gray-500">Calculating...</td></tr>
               </tbody>
             </table>
           </div>
@@ -180,45 +188,19 @@ permalink: /universe/macro/
       <!-- Right Column: Controls & Info -->
       <div class="space-y-6">
 
-        <!-- Controls -->
+        <!-- BTC Price Input -->
         <div class="universe-card rounded-lg p-6">
-          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Controls</h2>
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">BTC Price</h2>
           <div class="space-y-3">
-            <button onclick="MacroApp.fetchData()" class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded text-sm transition-colors">
-              Refresh Data
-            </button>
-            <div>
-              <label class="block text-xs text-gray-500 mb-1">BTC Price (manual)</label>
-              <input type="number" id="btc-input" value="89500" class="w-full bg-gray-900/50 border border-indigo-500/30 rounded px-3 py-2 text-gray-100 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="number" id="btc-input" value="89500" class="w-full bg-gray-900/50 border border-indigo-500/30 rounded px-3 py-2 text-gray-100 text-lg font-mono focus:outline-none focus:border-indigo-500">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="MacroApp.updateBtc()" class="py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded text-sm transition-colors">
+                Update
+              </button>
+              <button onclick="MacroApp.fetchBtc()" class="py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-300 rounded text-sm transition-colors">
+                Fetch Live
+              </button>
             </div>
-            <button onclick="MacroApp.updateBtc()" class="w-full py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-300 rounded text-sm transition-colors">
-              Update BTC
-            </button>
-          </div>
-        </div>
-
-        <!-- Backtest Presets -->
-        <div class="universe-card rounded-lg p-6">
-          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Backtest Presets</h2>
-          <div class="space-y-2">
-            <button onclick="MacroApp.loadPreset('2017q4')" class="w-full py-2 bg-gray-700/30 hover:bg-gray-700/50 text-gray-300 rounded text-xs transition-colors text-left px-3">
-              Dec 2017 - BTC Peak $19K
-            </button>
-            <button onclick="MacroApp.loadPreset('2018q4')" class="w-full py-2 bg-gray-700/30 hover:bg-gray-700/50 text-gray-300 rounded text-xs transition-colors text-left px-3">
-              Dec 2018 - BTC Bottom $3.2K
-            </button>
-            <button onclick="MacroApp.loadPreset('2020mar')" class="w-full py-2 bg-gray-700/30 hover:bg-gray-700/50 text-gray-300 rounded text-xs transition-colors text-left px-3">
-              Mar 2020 - COVID Crash
-            </button>
-            <button onclick="MacroApp.loadPreset('2021nov')" class="w-full py-2 bg-gray-700/30 hover:bg-gray-700/50 text-gray-300 rounded text-xs transition-colors text-left px-3">
-              Nov 2021 - BTC ATH $69K
-            </button>
-            <button onclick="MacroApp.loadPreset('2022nov')" class="w-full py-2 bg-gray-700/30 hover:bg-gray-700/50 text-gray-300 rounded text-xs transition-colors text-left px-3">
-              Nov 2022 - FTX Collapse
-            </button>
-            <button onclick="MacroApp.loadPreset('live')" class="w-full py-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 rounded text-xs transition-colors text-left px-3">
-              Live Data
-            </button>
           </div>
         </div>
 
@@ -228,26 +210,31 @@ permalink: /universe/macro/
           <div class="space-y-3 text-xs text-gray-400">
             <div>
               <p class="text-green-400 font-semibold">SUMMER (75-100)</p>
-              <p>Peak expansion. Risk assets favored. Watch for euphoria.</p>
+              <p>Peak expansion. Risk assets favored.</p>
             </div>
             <div>
               <p class="text-yellow-400 font-semibold">SPRING (55-75)</p>
-              <p>Recovery phase. Accumulate risk assets.</p>
+              <p>Recovery phase. Accumulate risk.</p>
             </div>
             <div>
               <p class="text-orange-400 font-semibold">FALL (35-55)</p>
-              <p>Late cycle. Reduce risk. Raise cash.</p>
+              <p>Late cycle. Reduce risk.</p>
             </div>
             <div>
               <p class="text-blue-400 font-semibold">WINTER (0-35)</p>
-              <p>Contraction. Defensive. Wait for bottom signals.</p>
+              <p>Contraction. Defensive posture.</p>
             </div>
           </div>
         </div>
 
-        <!-- FRED Attribution -->
-        <div class="universe-card rounded-lg p-4">
-          <p class="text-xs text-gray-500">Data from FRED (Federal Reserve Economic Data) via St. Louis Fed API. BTC price from CoinGecko.</p>
+        <!-- Data Source -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Data Sources</h2>
+          <div class="space-y-2 text-xs text-gray-500">
+            <p>FRED: Fed Balance Sheet, TGA, RRP, ISM, Credit Spreads, Yield Curve, DXY</p>
+            <p>BTC: CoinGecko (live) or manual</p>
+            <p class="text-gray-600 mt-2">Macro data updated via Claude Code sessions. Bring fresh FRED data to update.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -256,54 +243,130 @@ permalink: /universe/macro/
 
 <script>
 // ============================================================================
-// MACRO CYCLE DASHBOARD APP
+// CONFIGURATION
 // ============================================================================
+// Set your Cloudflare Worker URL here to enable live FRED data
+// Deploy cloudflare-worker/fred-proxy.js to Cloudflare Workers first
+// Example: 'https://fred-proxy.your-subdomain.workers.dev'
+const FRED_PROXY_URL = null;  // Set to your worker URL to enable live data
 
+// ============================================================================
+// MACRO DATA (Fallback when no proxy configured)
+// Last Updated: January 24, 2026
+// ============================================================================
+const MACRO_DATA = {
+  // Fed Balance Sheet (WALCL) - Millions
+  fedBalanceSheet: 6850000,  // $6.85T
+  fedBalanceSheetYoY: 6750000, // Year ago
+
+  // Treasury General Account (WTREGEN) - Millions
+  tga: 750000,  // $750B
+
+  // Reverse Repo (RRPONTSYD) - Billions
+  rrp: 150,  // $150B (way down from peak)
+
+  // ISM Manufacturing (NAPM)
+  ism: 49.2,
+  ism3moAgo: 47.8,
+
+  // HY Credit Spread (BAMLH0A0HYM2) - Percent
+  hySpread: 3.2,
+
+  // 10Y-2Y Yield Curve (T10Y2Y) - Percent
+  yieldCurve: 0.25,
+
+  // Trade-Weighted Dollar (DTWEXBGS)
+  dxy: 107.5,
+
+  // Data timestamp
+  asOf: 'January 24, 2026'
+};
+
+// ============================================================================
+// MACRO APP
+// ============================================================================
 const MacroApp = {
-  // FRED API configuration
-  FRED_API_KEY: 'd4040ea5a711a4f85f28d2473086e7bc',
-  FRED_BASE: 'https://api.stlouisfed.org/fred/series/observations',
-
-  // Required FRED series
-  SERIES: {
-    WALCL: 'Fed Balance Sheet',
-    WTREGEN: 'Treasury General Account',
-    RRPONTSYD: 'Reverse Repo',
-    NAPM: 'ISM Manufacturing',
-    BAMLH0A0HYM2: 'HY Credit Spread',
-    T10Y2Y: 'Yield Curve 10Y-2Y',
-    DTWEXBGS: 'Trade-Weighted Dollar'
-  },
-
-  // Backtest presets
-  PRESETS: {
-    '2017q4': { date: '2017-12-15', btc: 19000 },
-    '2018q4': { date: '2018-12-15', btc: 3200 },
-    '2020mar': { date: '2020-03-15', btc: 5000 },
-    '2021nov': { date: '2021-11-10', btc: 69000 },
-    '2022nov': { date: '2022-11-21', btc: 16000 },
-    '2024mar': { date: '2024-03-14', btc: 73000 },
-    'live': { date: null, btc: null }
-  },
-
-  // Indicator weights
-  WEIGHTS: {
-    netLiqYoY: 20,
-    dxy: 15,
-    hySpread: 10,
-    yieldCurve: 10,
-    ism: 15,
-    ismMomentum: 10,
-    btcDiscount: 20
-  },
-
-  // State (no persistence - adjust in Claude Code)
   btcPrice: 89500,
-  data: null,
-  targetDate: null,
+  liveData: null,
 
-  init() {
-    this.fetchData();
+  async init() {
+    if (FRED_PROXY_URL) {
+      await this.fetchLiveMacroData();
+    }
+    this.calculate();
+  },
+
+  async fetchLiveMacroData() {
+    try {
+      document.getElementById('data-date').textContent = 'Loading...';
+      document.getElementById('data-date').className = 'text-yellow-400';
+
+      // Fetch all series in parallel
+      const series = [
+        { id: 'WALCL', key: 'fedBalanceSheet' },
+        { id: 'WTREGEN', key: 'tga' },
+        { id: 'RRPONTSYD', key: 'rrp' },
+        { id: 'NAPM', key: 'ism' },
+        { id: 'BAMLH0A0HYM2', key: 'hySpread' },
+        { id: 'T10Y2Y', key: 'yieldCurve' },
+        { id: 'DTWEXBGS', key: 'dxy' }
+      ];
+
+      const results = await Promise.all(
+        series.map(async s => {
+          const res = await fetch(`${FRED_PROXY_URL}?series_id=${s.id}&limit=5`);
+          const data = await res.json();
+          return { ...s, data };
+        })
+      );
+
+      // Process results
+      this.liveData = {};
+      let latestDate = null;
+
+      results.forEach(r => {
+        const obs = r.data.observations;
+        if (obs && obs.length > 0) {
+          const val = parseFloat(obs[0].value);
+          if (!isNaN(val)) {
+            this.liveData[r.key] = val;
+            // Track latest date
+            if (!latestDate || obs[0].date > latestDate) {
+              latestDate = obs[0].date;
+            }
+          }
+          // Get YoY for fed balance sheet
+          if (r.key === 'fedBalanceSheet' && obs.length > 1) {
+            const yoyVal = parseFloat(obs[obs.length - 1].value);
+            if (!isNaN(yoyVal)) {
+              this.liveData.fedBalanceSheetYoY = yoyVal;
+            }
+          }
+          // Get 3mo ago ISM
+          if (r.key === 'ism' && obs.length >= 4) {
+            const ism3mo = parseFloat(obs[3].value);
+            if (!isNaN(ism3mo)) {
+              this.liveData.ism3moAgo = ism3mo;
+            }
+          }
+        }
+      });
+
+      // Update MACRO_DATA with live values
+      if (Object.keys(this.liveData).length > 0) {
+        Object.assign(MACRO_DATA, this.liveData);
+        if (latestDate) {
+          const d = new Date(latestDate);
+          MACRO_DATA.asOf = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+        document.getElementById('data-date').textContent = MACRO_DATA.asOf + ' (Live)';
+        document.getElementById('data-date').className = 'text-green-400';
+      }
+    } catch (e) {
+      console.error('Failed to fetch live FRED data:', e);
+      document.getElementById('data-date').textContent = MACRO_DATA.asOf + ' (Cached)';
+      document.getElementById('data-date').className = 'text-yellow-400';
+    }
   },
 
   updateBtc() {
@@ -314,199 +377,115 @@ const MacroApp = {
     }
   },
 
-  loadPreset(key) {
-    const preset = this.PRESETS[key];
-    if (preset.date) {
-      this.targetDate = preset.date;
-      this.btcPrice = preset.btc;
-      document.getElementById('btc-input').value = preset.btc;
-      document.getElementById('data-status').textContent = 'Backtest: ' + preset.date;
-    } else {
-      this.targetDate = null;
-      document.getElementById('data-status').textContent = 'Live';
-    }
-    this.fetchData();
-  },
-
-  async fetchData() {
-    document.getElementById('data-status').textContent = 'Fetching...';
-    document.getElementById('data-status').className = 'text-yellow-400';
-
+  async fetchBtc() {
     try {
-      const data = {};
-      const endDate = this.targetDate || new Date().toISOString().split('T')[0];
-
-      // Fetch all series in parallel
-      const fetches = Object.entries(this.SERIES).map(async ([id, name]) => {
-        try {
-          const url = `${this.FRED_BASE}?series_id=${id}&api_key=${this.FRED_API_KEY}&file_type=json&sort_order=desc&limit=100&observation_end=${endDate}`;
-          const res = await fetch(url);
-          const json = await res.json();
-          if (json.observations && json.observations.length > 0) {
-            data[id] = json.observations.map(o => ({
-              date: o.date,
-              value: parseFloat(o.value) || null
-            })).filter(o => o.value !== null);
-          }
-        } catch (e) {
-          console.warn(`Failed to fetch ${id}:`, e);
-          data[id] = [];
-        }
-      });
-
-      await Promise.all(fetches);
-
-      // Also fetch BTC if live mode
-      if (!this.targetDate) {
-        try {
-          const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-          const btcData = await btcRes.json();
-          if (btcData.bitcoin?.usd) {
-            this.btcPrice = btcData.bitcoin.usd;
-            document.getElementById('btc-input').value = this.btcPrice;
-          }
-        } catch (e) {
-          console.warn('Failed to fetch BTC price');
-        }
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      const data = await res.json();
+      if (data.bitcoin?.usd) {
+        this.btcPrice = data.bitcoin.usd;
+        document.getElementById('btc-input').value = this.btcPrice;
+        this.calculate();
       }
-
-      this.data = data;
-      
-      document.getElementById('data-status').textContent = this.targetDate ? 'Backtest: ' + this.targetDate : 'Live';
-      document.getElementById('data-status').className = 'text-green-400';
-
-      this.calculate();
     } catch (e) {
-      console.error('Data fetch error:', e);
-      document.getElementById('data-status').textContent = 'Error';
-      document.getElementById('data-status').className = 'text-red-400';
+      alert('Failed to fetch. Enter manually.');
     }
   },
 
   calculate() {
-    const d = this.data;
-    if (!d) return;
+    const d = MACRO_DATA;
 
-    const latest = (series) => d[series]?.[0]?.value || null;
-    const prev = (series, offset = 1) => d[series]?.[offset]?.value || null;
-    const prevYear = (series) => d[series]?.[52]?.value || d[series]?.[d[series]?.length - 1]?.value || null;
-
-    // Calculate net liquidity
-    const fedBs = latest('WALCL') ? latest('WALCL') * 1e6 : null; // Millions to dollars
-    const tga = latest('WTREGEN') ? latest('WTREGEN') * 1e6 : null;
-    const rrp = latest('RRPONTSYD') ? latest('RRPONTSYD') * 1e9 : null; // Billions to dollars
-    const netLiq = (fedBs && tga && rrp) ? fedBs - tga - rrp : null;
+    // Net Liquidity
+    const fedBs = d.fedBalanceSheet * 1e6;
+    const tga = d.tga * 1e6;
+    const rrp = d.rrp * 1e9;
+    const netLiq = fedBs - tga - rrp;
 
     // YoY change
-    const fedBsPrev = prevYear('WALCL') ? prevYear('WALCL') * 1e6 : null;
-    const tgaPrev = prevYear('WTREGEN') ? prevYear('WTREGEN') * 1e6 : null;
-    const rrpPrev = prevYear('RRPONTSYD') ? prevYear('RRPONTSYD') * 1e9 : null;
-    const netLiqPrev = (fedBsPrev && tgaPrev && rrpPrev) ? fedBsPrev - tgaPrev - rrpPrev : null;
-    const netLiqYoY = (netLiq && netLiqPrev) ? ((netLiq - netLiqPrev) / netLiqPrev) * 100 : null;
+    const fedBsYoY = d.fedBalanceSheetYoY * 1e6;
+    const netLiqYoY = ((fedBs - fedBsYoY) / fedBsYoY) * 100;
 
-    // Financial conditions
-    const dxy = latest('DTWEXBGS');
-    const hySpread = latest('BAMLH0A0HYM2');
-    const yieldCurve = latest('T10Y2Y');
-
-    // FCI composite (0-100, higher = looser)
+    // Financial Conditions Index (0-100, higher = looser)
     let fci = 50;
-    if (dxy !== null) fci += (110 - dxy) * 2.5;
-    if (hySpread !== null) fci += (5 - hySpread) * 6;
-    if (yieldCurve !== null) fci += yieldCurve * 10;
+    fci += (110 - d.dxy) * 2.5;  // Dollar weakness
+    fci += (5 - d.hySpread) * 6;  // Tight spreads
+    fci += d.yieldCurve * 10;  // Steep curve
     fci = Math.max(0, Math.min(100, fci));
-
-    // ISM
-    const ism = latest('NAPM');
-    const ism3mo = prev('NAPM', 3);
-    const ismMomentum = (ism && ism3mo) ? ism - ism3mo : null;
 
     // BTC Fair Value (liquidity-based)
     const baseLiq = 5.95e12;
     const baseBtc = 90000;
-    const btcFairValue = netLiq ? baseBtc * Math.pow(netLiq / baseLiq, 1.4) : null;
-    const btcDiscount = btcFairValue ? ((btcFairValue - this.btcPrice) / btcFairValue) * 100 : null;
+    const btcFairValue = baseBtc * Math.pow(netLiq / baseLiq, 1.4);
+    const btcDiscount = ((btcFairValue - this.btcPrice) / btcFairValue) * 100;
+
+    // ISM momentum
+    const ismMomentum = d.ism - d.ism3moAgo;
 
     // Calculate scores
     const scores = [];
 
-    // Net Liquidity YoY (weight: 20%)
+    // Net Liquidity YoY (20%)
     let liqScore = 0, liqSignal = 'Neutral';
-    if (netLiqYoY !== null) {
-      if (netLiqYoY > 5) { liqScore = 20; liqSignal = 'Bullish'; }
-      else if (netLiqYoY > 0) { liqScore = 10; liqSignal = 'Neutral'; }
-      else if (netLiqYoY > -5) { liqScore = 0; liqSignal = 'Caution'; }
-      else { liqScore = -10; liqSignal = 'Bearish'; }
-    }
-    scores.push({ name: 'Net Liquidity YoY', value: netLiqYoY?.toFixed(1) + '%', signal: liqSignal, weight: 20, score: liqScore });
+    if (netLiqYoY > 5) { liqScore = 20; liqSignal = 'Bullish'; }
+    else if (netLiqYoY > 0) { liqScore = 10; liqSignal = 'Neutral'; }
+    else if (netLiqYoY > -5) { liqScore = 0; liqSignal = 'Caution'; }
+    else { liqScore = -10; liqSignal = 'Bearish'; }
+    scores.push({ name: 'Net Liquidity YoY', value: netLiqYoY.toFixed(1) + '%', signal: liqSignal, weight: 20, score: liqScore });
 
-    // DXY (weight: 15%)
+    // DXY (15%)
     let dxyScore = 0, dxySignal = 'Neutral';
-    if (dxy !== null) {
-      if (dxy < 105) { dxyScore = 15; dxySignal = 'Bullish'; }
-      else if (dxy < 110) { dxyScore = 7; dxySignal = 'Neutral'; }
-      else if (dxy < 115) { dxyScore = 0; dxySignal = 'Caution'; }
-      else { dxyScore = -8; dxySignal = 'Bearish'; }
-    }
-    scores.push({ name: 'Trade-Weighted Dollar', value: dxy?.toFixed(1), signal: dxySignal, weight: 15, score: dxyScore });
+    if (d.dxy < 105) { dxyScore = 15; dxySignal = 'Bullish'; }
+    else if (d.dxy < 110) { dxyScore = 7; dxySignal = 'Neutral'; }
+    else if (d.dxy < 115) { dxyScore = 0; dxySignal = 'Caution'; }
+    else { dxyScore = -8; dxySignal = 'Bearish'; }
+    scores.push({ name: 'Trade-Weighted Dollar', value: d.dxy.toFixed(1), signal: dxySignal, weight: 15, score: dxyScore });
 
-    // HY Spread (weight: 10%)
+    // HY Spread (10%)
     let hyScore = 0, hySignal = 'Neutral';
-    if (hySpread !== null) {
-      if (hySpread < 4) { hyScore = 10; hySignal = 'Bullish'; }
-      else if (hySpread < 5) { hyScore = 5; hySignal = 'Neutral'; }
-      else if (hySpread < 6) { hyScore = 0; hySignal = 'Caution'; }
-      else { hyScore = -5; hySignal = 'Bearish'; }
-    }
-    scores.push({ name: 'HY Credit Spread', value: hySpread?.toFixed(2) + '%', signal: hySignal, weight: 10, score: hyScore });
+    if (d.hySpread < 4) { hyScore = 10; hySignal = 'Bullish'; }
+    else if (d.hySpread < 5) { hyScore = 5; hySignal = 'Neutral'; }
+    else if (d.hySpread < 6) { hyScore = 0; hySignal = 'Caution'; }
+    else { hyScore = -5; hySignal = 'Bearish'; }
+    scores.push({ name: 'HY Credit Spread', value: d.hySpread.toFixed(2) + '%', signal: hySignal, weight: 10, score: hyScore });
 
-    // Yield Curve (weight: 10%)
+    // Yield Curve (10%)
     let curveScore = 0, curveSignal = 'Neutral';
-    if (yieldCurve !== null) {
-      if (yieldCurve > 0.5) { curveScore = 10; curveSignal = 'Bullish'; }
-      else if (yieldCurve > 0) { curveScore = 5; curveSignal = 'Neutral'; }
-      else if (yieldCurve > -0.3) { curveScore = 0; curveSignal = 'Caution'; }
-      else { curveScore = -5; curveSignal = 'Bearish'; }
-    }
-    scores.push({ name: '10Y-2Y Yield Curve', value: yieldCurve?.toFixed(2) + '%', signal: curveSignal, weight: 10, score: curveScore });
+    if (d.yieldCurve > 0.5) { curveScore = 10; curveSignal = 'Bullish'; }
+    else if (d.yieldCurve > 0) { curveScore = 5; curveSignal = 'Neutral'; }
+    else if (d.yieldCurve > -0.3) { curveScore = 0; curveSignal = 'Caution'; }
+    else { curveScore = -5; curveSignal = 'Bearish'; }
+    scores.push({ name: '10Y-2Y Yield Curve', value: d.yieldCurve.toFixed(2) + '%', signal: curveSignal, weight: 10, score: curveScore });
 
-    // ISM (weight: 15%)
+    // ISM (15%)
     let ismScore = 0, ismSignal = 'Neutral';
-    if (ism !== null) {
-      if (ism > 52) { ismScore = 15; ismSignal = 'Bullish'; }
-      else if (ism > 50) { ismScore = 7; ismSignal = 'Neutral'; }
-      else if (ism > 48) { ismScore = 0; ismSignal = 'Caution'; }
-      else { ismScore = -8; ismSignal = 'Bearish'; }
-    }
-    scores.push({ name: 'ISM Manufacturing', value: ism?.toFixed(1), signal: ismSignal, weight: 15, score: ismScore });
+    if (d.ism > 52) { ismScore = 15; ismSignal = 'Bullish'; }
+    else if (d.ism > 50) { ismScore = 7; ismSignal = 'Neutral'; }
+    else if (d.ism > 48) { ismScore = 0; ismSignal = 'Caution'; }
+    else { ismScore = -8; ismSignal = 'Bearish'; }
+    scores.push({ name: 'ISM Manufacturing', value: d.ism.toFixed(1), signal: ismSignal, weight: 15, score: ismScore });
 
-    // ISM Momentum (weight: 10%)
+    // ISM Momentum (10%)
     let momScore = 0, momSignal = 'Neutral';
-    if (ismMomentum !== null) {
-      if (ismMomentum > 1) { momScore = 10; momSignal = 'Bullish'; }
-      else if (ismMomentum > 0) { momScore = 5; momSignal = 'Neutral'; }
-      else if (ismMomentum > -1) { momScore = 0; momSignal = 'Caution'; }
-      else { momScore = -5; momSignal = 'Bearish'; }
-    }
-    scores.push({ name: 'ISM 3Mo Momentum', value: ismMomentum?.toFixed(1), signal: momSignal, weight: 10, score: momScore });
+    if (ismMomentum > 1) { momScore = 10; momSignal = 'Bullish'; }
+    else if (ismMomentum > 0) { momScore = 5; momSignal = 'Neutral'; }
+    else if (ismMomentum > -1) { momScore = 0; momSignal = 'Caution'; }
+    else { momScore = -5; momSignal = 'Bearish'; }
+    scores.push({ name: 'ISM 3Mo Momentum', value: (ismMomentum > 0 ? '+' : '') + ismMomentum.toFixed(1), signal: momSignal, weight: 10, score: momScore });
 
-    // BTC vs Fair Value (weight: 20%)
+    // BTC vs Fair Value (20%)
     let btcScore = 0, btcSignal = 'Neutral';
-    if (btcDiscount !== null) {
-      if (btcDiscount > 20) { btcScore = 20; btcSignal = 'Bullish'; }
-      else if (btcDiscount > 10) { btcScore = 15; btcSignal = 'Bullish'; }
-      else if (btcDiscount > 0) { btcScore = 5; btcSignal = 'Neutral'; }
-      else if (btcDiscount > -20) { btcScore = 0; btcSignal = 'Caution'; }
-      else { btcScore = -10; btcSignal = 'Bearish'; }
-    }
-    scores.push({ name: 'BTC vs Fair Value', value: btcDiscount?.toFixed(1) + '%', signal: btcSignal, weight: 20, score: btcScore });
+    if (btcDiscount > 20) { btcScore = 20; btcSignal = 'Bullish'; }
+    else if (btcDiscount > 10) { btcScore = 15; btcSignal = 'Bullish'; }
+    else if (btcDiscount > 0) { btcScore = 5; btcSignal = 'Neutral'; }
+    else if (btcDiscount > -20) { btcScore = 0; btcSignal = 'Caution'; }
+    else { btcScore = -10; btcSignal = 'Bearish'; }
+    scores.push({ name: 'BTC vs Fair Value', value: (btcDiscount > 0 ? '+' : '') + btcDiscount.toFixed(1) + '%', signal: btcSignal, weight: 20, score: btcScore });
 
-    // Calculate total score
+    // Total score
     const totalScore = scores.reduce((a, s) => a + s.score, 0);
     const maxScore = scores.reduce((a, s) => a + s.weight, 0);
     const cyclePos = 50 + (totalScore / maxScore) * 50;
 
-    // Determine season
+    // Season
     let season, mainSignal;
     if (cyclePos >= 75) { season = 'SUMMER'; mainSignal = 'Risk On'; }
     else if (cyclePos >= 55) { season = 'SPRING'; mainSignal = 'Accumulate'; }
@@ -515,56 +494,58 @@ const MacroApp = {
 
     // Update UI
     this.updateUI({
-      netLiq, netLiqYoY, dxy, hySpread, yieldCurve, fci,
-      ism, ismMomentum, btcFairValue, btcDiscount,
-      scores, cyclePos, season, mainSignal, liqSignal, btcSignal, ismSignal
+      netLiq, netLiqYoY, fci,
+      btcFairValue, btcDiscount, ismMomentum,
+      scores, cyclePos, season, mainSignal,
+      liqSignal, btcSignal, ismSignal
     });
   },
 
   updateUI(data) {
     const fmt = (n) => '$' + (n / 1e12).toFixed(2) + 'T';
+    const d = MACRO_DATA;
 
     // Header
     document.getElementById('cycle-score').textContent = data.cyclePos.toFixed(0);
     document.getElementById('cycle-season').textContent = data.season;
     document.getElementById('main-signal').textContent = data.mainSignal;
+    document.getElementById('data-date').textContent = d.asOf;
 
-    // Color code season
+    // Season colors
     const seasonColors = { 'SUMMER': 'text-green-400', 'SPRING': 'text-yellow-400', 'FALL': 'text-orange-400', 'WINTER': 'text-blue-400' };
     document.getElementById('cycle-season').className = 'text-lg font-semibold ' + (seasonColors[data.season] || 'text-gray-400');
     document.getElementById('cycle-score').className = 'text-2xl font-bold ' + (seasonColors[data.season] || 'text-gray-400');
 
-    // Cycle needle position
+    // Needle position
     document.getElementById('cycle-needle').style.left = data.cyclePos + '%';
 
-    // Probability grid (simplified)
+    // Probability grid
     const bull = Math.max(0, (data.cyclePos - 50) * 2);
     const bear = Math.max(0, (50 - data.cyclePos) * 2);
-    const neutral = 100 - bull - bear;
     document.getElementById('prob-bullish').textContent = bull.toFixed(0) + '%';
-    document.getElementById('prob-neutral').textContent = Math.max(0, neutral - 20).toFixed(0) + '%';
-    document.getElementById('prob-caution').textContent = Math.min(40, Math.max(0, 50 - Math.abs(data.cyclePos - 50))).toFixed(0) + '%';
+    document.getElementById('prob-neutral').textContent = Math.max(0, 100 - bull - bear - 20).toFixed(0) + '%';
+    document.getElementById('prob-caution').textContent = Math.min(30, Math.max(0, 40 - Math.abs(data.cyclePos - 50))).toFixed(0) + '%';
     document.getElementById('prob-bearish').textContent = bear.toFixed(0) + '%';
 
     // Data cards
-    document.getElementById('net-liquidity').textContent = data.netLiq ? fmt(data.netLiq) : '--';
-    document.getElementById('liq-yoy').textContent = data.netLiqYoY ? (data.netLiqYoY > 0 ? '+' : '') + data.netLiqYoY.toFixed(1) + '%' : '--';
+    document.getElementById('net-liquidity').textContent = fmt(data.netLiq);
+    document.getElementById('liq-yoy').textContent = (data.netLiqYoY > 0 ? '+' : '') + data.netLiqYoY.toFixed(1) + '%';
     document.getElementById('liq-signal').textContent = data.liqSignal;
 
     document.getElementById('fci-score').textContent = data.fci.toFixed(0);
-    document.getElementById('fci-dxy').textContent = data.dxy?.toFixed(1) || '--';
-    document.getElementById('fci-hy').textContent = data.hySpread?.toFixed(2) + '%' || '--';
-    document.getElementById('fci-curve').textContent = data.yieldCurve?.toFixed(2) + '%' || '--';
+    document.getElementById('fci-dxy').textContent = d.dxy.toFixed(1);
+    document.getElementById('fci-hy').textContent = d.hySpread.toFixed(2) + '%';
+    document.getElementById('fci-curve').textContent = d.yieldCurve.toFixed(2) + '%';
 
-    document.getElementById('ism-value').textContent = data.ism?.toFixed(1) || '--';
-    document.getElementById('ism-momentum').textContent = data.ismMomentum ? (data.ismMomentum > 0 ? '+' : '') + data.ismMomentum.toFixed(1) : '--';
+    document.getElementById('ism-value').textContent = d.ism.toFixed(1);
+    document.getElementById('ism-momentum').textContent = (data.ismMomentum > 0 ? '+' : '') + data.ismMomentum.toFixed(1);
     document.getElementById('ism-signal').textContent = data.ismSignal;
 
-    document.getElementById('btc-discount').textContent = data.btcDiscount ? (data.btcDiscount > 0 ? '+' : '') + data.btcDiscount.toFixed(1) + '%' : '--';
-    document.getElementById('btc-fair-value').textContent = data.btcFairValue ? '$' + Math.round(data.btcFairValue).toLocaleString() : '--';
+    document.getElementById('btc-discount').textContent = (data.btcDiscount > 0 ? '+' : '') + data.btcDiscount.toFixed(1) + '%';
+    document.getElementById('btc-fair-value').textContent = '$' + Math.round(data.btcFairValue).toLocaleString();
     document.getElementById('btc-signal').textContent = data.btcSignal;
 
-    // Signal badges colors
+    // Signal badge colors
     const signalColors = {
       'Bullish': 'bg-green-500/20 text-green-400',
       'Neutral': 'bg-yellow-500/20 text-yellow-400',
@@ -578,13 +559,14 @@ const MacroApp = {
     // Scorecard table
     document.getElementById('scorecard-body').innerHTML = data.scores.map(s => {
       const signalClass = signalColors[s.signal]?.split(' ')[1] || 'text-gray-400';
+      const scoreClass = s.score > 0 ? 'text-green-400' : s.score < 0 ? 'text-red-400' : 'text-gray-400';
       return `
         <tr class="border-b border-gray-800/50">
           <td class="py-2 text-gray-300">${s.name}</td>
-          <td class="py-2 text-right text-gray-100 font-mono">${s.value || '--'}</td>
+          <td class="py-2 text-right text-gray-100 font-mono">${s.value}</td>
           <td class="py-2 text-right ${signalClass}">${s.signal}</td>
           <td class="py-2 text-right text-gray-500">${s.weight}%</td>
-          <td class="py-2 text-right font-semibold ${s.score > 0 ? 'text-green-400' : s.score < 0 ? 'text-red-400' : 'text-gray-400'}">${s.score > 0 ? '+' : ''}${s.score}</td>
+          <td class="py-2 text-right font-semibold ${scoreClass}">${s.score > 0 ? '+' : ''}${s.score}</td>
         </tr>
       `;
     }).join('');

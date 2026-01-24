@@ -105,7 +105,7 @@ permalink: /universe/btc-sine/
             <div>
               <div class="flex justify-between text-xs text-gray-500 mb-2">
                 <span>Bottom (Nov 2022)</span>
-                <span id="peak-label">Peak (Aug 2026)</span>
+                <span id="peak-label">Peak (Dec 2026)</span>
               </div>
               <div class="h-3 bg-gradient-to-r from-blue-600 via-green-500 via-yellow-500 to-red-500 rounded-full relative">
                 <div id="cycle-marker" class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full border-2 border-gray-900 shadow-lg" style="left: 50%"></div>
@@ -225,7 +225,7 @@ permalink: /universe/btc-sine/
             </div>
             <div class="flex justify-between">
               <span class="text-gray-500">Cycle Peak</span>
-              <span id="param-peak" class="text-gray-300">Aug 15, 2026</span>
+              <span id="param-peak" class="text-gray-300">Dec 1, 2026</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-500">Log A</span>
@@ -273,8 +273,8 @@ const SineApp = {
     logB: 7.5,
     logStd: 0.095,
     bottomDate: new Date('2022-11-21'),
-    peakDate: new Date('2026-08-15'),
-    peakDateExtended: new Date('2026-11-15'),
+    peakDate: new Date('2026-12-01'),
+    peakDateExtended: new Date('2027-03-01'),
     bottomStdDev: -3.0,
     peakStdDev: 1.5
   },
@@ -469,8 +469,8 @@ const SineApp = {
     document.getElementById('entry-3').textContent = fmt(data.expectedPrice * (1 - data.entries[2].pct));
 
     // Peak label
-    document.getElementById('peak-label').textContent = this.extended ? 'Peak (Nov 2026)' : 'Peak (Aug 2026)';
-    document.getElementById('param-peak').textContent = this.extended ? 'Nov 15, 2026' : 'Aug 15, 2026';
+    document.getElementById('peak-label').textContent = this.extended ? 'Peak (Mar 2027)' : 'Peak (Dec 2026)';
+    document.getElementById('param-peak').textContent = this.extended ? 'Mar 1, 2027' : 'Dec 1, 2026';
   }
 };
 
