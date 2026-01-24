@@ -1,0 +1,494 @@
+---
+layout: layouts/universe.njk
+title: BTC Sine Model
+permalink: /universe/btc-sine/
+---
+
+<div id="sine-app" class="min-h-screen">
+  <!-- Header -->
+  <div class="border-b border-indigo-500/20 bg-gray-900/50">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <a href="/universe/" class="text-xs text-indigo-400 hover:text-indigo-300 mb-1 inline-block">&larr; Dashboard</a>
+          <h1 class="text-xl font-semibold text-gray-100">BTC Sine Model</h1>
+          <p class="text-xs text-gray-500 mt-1">GMI/Bittel Cycle Framework</p>
+        </div>
+        <div class="flex flex-wrap gap-4 sm:gap-6 text-center">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-gray-500">BTC Price</p>
+            <p id="btc-price" class="text-lg font-semibold text-gray-100">$--</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wider text-gray-500">Baseline</p>
+            <p id="baseline-price" class="text-lg font-semibold text-gray-400">$--</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wider text-gray-500">Expected</p>
+            <p id="expected-price" class="text-lg font-semibold text-indigo-400">$--</p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wider text-gray-500">Delta</p>
+            <p id="delta" class="text-lg font-semibold text-green-400">--</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left: Band Chart & Indicators -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- σ Band Chart -->
+        <div class="universe-card rounded-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400">Standard Deviation Bands</h2>
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-gray-500">Extended Cycle</label>
+              <input type="checkbox" id="extended-toggle" class="rounded bg-gray-800 border-gray-600 text-indigo-500 focus:ring-indigo-500" onchange="SineApp.toggleExtended()">
+            </div>
+          </div>
+
+          <!-- Band Visualization -->
+          <div class="relative h-64 bg-gray-900/50 rounded-lg overflow-hidden">
+            <!-- Bands -->
+            <div id="band-chart" class="absolute inset-0 flex flex-col">
+              <div class="flex-1 bg-red-500/30 border-b border-red-500/50 flex items-center px-4">
+                <span class="text-xs text-red-300">+2σ to +1.5σ</span>
+                <span id="band-2" class="ml-auto text-xs text-red-200 font-mono">$--</span>
+              </div>
+              <div class="flex-1 bg-orange-500/20 border-b border-orange-500/50 flex items-center px-4">
+                <span class="text-xs text-orange-300">+1.5σ to +1σ</span>
+                <span id="band-15" class="ml-auto text-xs text-orange-200 font-mono">$--</span>
+              </div>
+              <div class="flex-1 bg-yellow-500/15 border-b border-yellow-500/50 flex items-center px-4">
+                <span class="text-xs text-yellow-300">+1σ to Baseline</span>
+                <span id="band-1" class="ml-auto text-xs text-yellow-200 font-mono">$--</span>
+              </div>
+              <div class="flex-1 bg-green-500/15 border-b border-green-500/50 flex items-center px-4">
+                <span class="text-xs text-green-300">Baseline to -1σ</span>
+                <span id="band-0" class="ml-auto text-xs text-green-200 font-mono">$--</span>
+              </div>
+              <div class="flex-1 bg-blue-500/20 border-b border-blue-500/50 flex items-center px-4">
+                <span class="text-xs text-blue-300">-1σ to -2σ</span>
+                <span id="band-m1" class="ml-auto text-xs text-blue-200 font-mono">$--</span>
+              </div>
+              <div class="flex-1 bg-indigo-500/30 flex items-center px-4">
+                <span class="text-xs text-indigo-300">-2σ to -3σ</span>
+                <span id="band-m2" class="ml-auto text-xs text-indigo-200 font-mono">$--</span>
+              </div>
+            </div>
+
+            <!-- Price Markers -->
+            <div id="actual-price-line" class="absolute left-0 right-0 h-0.5 bg-white shadow-lg z-10" style="top: 50%">
+              <span class="absolute -top-5 left-4 text-xs text-white font-semibold bg-gray-900/80 px-2 py-0.5 rounded">Actual</span>
+            </div>
+            <div id="expected-price-line" class="absolute left-0 right-0 h-0.5 bg-orange-400 shadow-lg z-10 opacity-70" style="top: 40%">
+              <span class="absolute -bottom-5 left-4 text-xs text-orange-400 font-semibold bg-gray-900/80 px-2 py-0.5 rounded">Expected</span>
+            </div>
+          </div>
+
+          <div class="mt-4 flex justify-between text-xs text-gray-500">
+            <span>Current σ: <span id="current-sigma" class="text-indigo-400 font-semibold">--</span></span>
+            <span>Expected σ: <span id="expected-sigma" class="text-orange-400 font-semibold">--</span></span>
+          </div>
+        </div>
+
+        <!-- Cycle Progress -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Cycle Progress</h2>
+          <div class="space-y-4">
+            <!-- Sine Wave Progress -->
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-2">
+                <span>Bottom (Nov 2022)</span>
+                <span id="peak-label">Peak (Aug 2026)</span>
+              </div>
+              <div class="h-3 bg-gradient-to-r from-blue-600 via-green-500 via-yellow-500 to-red-500 rounded-full relative">
+                <div id="cycle-marker" class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full border-2 border-gray-900 shadow-lg" style="left: 50%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400 mt-2">
+                <span>Sine: <span id="sine-value" class="font-mono">--</span></span>
+                <span>Day <span id="day-in-cycle">--</span> of <span id="total-days">--</span></span>
+                <span><span id="days-to-peak">--</span> days to peak</span>
+              </div>
+            </div>
+
+            <!-- Phase Indicator -->
+            <div class="p-4 rounded bg-gray-900/50 text-center">
+              <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Current Phase</p>
+              <p id="phase-name" class="text-2xl font-bold text-yellow-400">--</p>
+              <p id="zone-action" class="text-sm text-gray-400 mt-1">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entry/Exit Levels -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Dynamic Entry/Exit Levels</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Exit Levels -->
+            <div>
+              <h3 class="text-xs text-red-400 uppercase tracking-wider mb-3">Exit Targets</h3>
+              <div class="space-y-2" id="exit-levels">
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Trim 25% @ +1.0σ</span>
+                  <span id="exit-1" class="text-gray-200 font-mono">$--</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Sell 30% @ +1.3σ</span>
+                  <span id="exit-2" class="text-gray-200 font-mono">$--</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Exit Rest @ +1.6σ</span>
+                  <span id="exit-3" class="text-gray-200 font-mono">$--</span>
+                </div>
+              </div>
+            </div>
+            <!-- Entry Levels -->
+            <div>
+              <h3 class="text-xs text-green-400 uppercase tracking-wider mb-3">Entry Targets</h3>
+              <div class="space-y-2" id="entry-levels">
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Light @ -10%</span>
+                  <span id="entry-1" class="text-gray-200 font-mono">$--</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Moderate @ -20%</span>
+                  <span id="entry-2" class="text-gray-200 font-mono">$--</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Aggressive @ -35%</span>
+                  <span id="entry-3" class="text-gray-200 font-mono">$--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-4">* Levels adjust dynamically based on delta (mispricing)</p>
+        </div>
+      </div>
+
+      <!-- Right: Controls & Info -->
+      <div class="space-y-6">
+
+        <!-- Current Status -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Status</h2>
+          <div class="space-y-4">
+            <div class="p-4 rounded bg-gray-900/50">
+              <p class="text-xs text-gray-500 mb-1">Zone</p>
+              <p id="current-zone" class="text-xl font-bold text-green-400">--</p>
+            </div>
+            <div class="p-4 rounded bg-gray-900/50">
+              <p class="text-xs text-gray-500 mb-1">Mispricing</p>
+              <p id="mispricing-display" class="text-xl font-bold text-green-400">--</p>
+              <p class="text-xs text-gray-500 mt-1">vs expected price</p>
+            </div>
+            <div class="p-4 rounded bg-gray-900/50">
+              <p class="text-xs text-gray-500 mb-1">Signal</p>
+              <p id="signal-text" class="text-sm text-gray-300">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual Price Input -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Price Input</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">BTC Price ($)</label>
+              <input type="number" id="price-input" value="89500" class="w-full bg-gray-900/50 border border-indigo-500/30 rounded px-3 py-2 text-gray-100 text-sm focus:outline-none focus:border-indigo-500">
+            </div>
+            <button onclick="SineApp.updatePrice()" class="w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded text-sm transition-colors">
+              Update
+            </button>
+            <button onclick="SineApp.fetchLivePrice()" class="w-full py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-300 rounded text-sm transition-colors">
+              Fetch Live Price
+            </button>
+          </div>
+        </div>
+
+        <!-- Model Parameters -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Model Parameters</h2>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="text-gray-500">Genesis</span>
+              <span class="text-gray-300">Jan 3, 2009</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Cycle Bottom</span>
+              <span class="text-gray-300">Nov 21, 2022</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Cycle Peak</span>
+              <span id="param-peak" class="text-gray-300">Aug 15, 2026</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Log A</span>
+              <span class="text-gray-300 font-mono">-23.3</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Log B</span>
+              <span class="text-gray-300 font-mono">7.5</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Log σ</span>
+              <span class="text-gray-300 font-mono">0.095</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Bottom σ</span>
+              <span class="text-gray-300 font-mono">-3.0</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Peak σ</span>
+              <span class="text-gray-300 font-mono">+1.5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Source -->
+        <div class="universe-card rounded-lg p-6">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Framework Source</h2>
+          <p class="text-xs text-gray-400">Based on GMI (Global Macro Investor) and Julien Bittel's macro framework combining log regression fair value with sine-based cycle timing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// BTC SINE MODEL APP
+// ============================================================================
+
+const SineApp = {
+  // Model parameters
+  params: {
+    genesis: new Date('2009-01-03'),
+    logA: -23.3,
+    logB: 7.5,
+    logStd: 0.095,
+    bottomDate: new Date('2022-11-21'),
+    peakDate: new Date('2026-08-15'),
+    peakDateExtended: new Date('2026-11-15'),
+    bottomStdDev: -3.0,
+    peakStdDev: 1.5
+  },
+
+  state: {
+    btcPrice: 89500,
+    extended: false
+  },
+
+  init() {
+    // Load saved state
+    const saved = localStorage.getItem('sine_app_state');
+    if (saved) {
+      this.state = { ...this.state, ...JSON.parse(saved) };
+      document.getElementById('price-input').value = this.state.btcPrice;
+      document.getElementById('extended-toggle').checked = this.state.extended;
+    }
+    this.calculate();
+  },
+
+  saveState() {
+    localStorage.setItem('sine_app_state', JSON.stringify(this.state));
+  },
+
+  toggleExtended() {
+    this.state.extended = document.getElementById('extended-toggle').checked;
+    this.saveState();
+    this.calculate();
+  },
+
+  updatePrice() {
+    const price = parseFloat(document.getElementById('price-input').value);
+    if (price > 0) {
+      this.state.btcPrice = price;
+      this.saveState();
+      this.calculate();
+    }
+  },
+
+  async fetchLivePrice() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      const data = await res.json();
+      if (data.bitcoin?.usd) {
+        this.state.btcPrice = data.bitcoin.usd;
+        document.getElementById('price-input').value = this.state.btcPrice;
+        this.saveState();
+        this.calculate();
+      }
+    } catch (e) {
+      alert('Failed to fetch price. Using manual input.');
+    }
+  },
+
+  getPeakDate() {
+    return this.state.extended ? this.params.peakDateExtended : this.params.peakDate;
+  },
+
+  getDaysInCycle() {
+    return Math.floor((this.getPeakDate() - this.params.bottomDate) / 86400000);
+  },
+
+  calculate() {
+    const p = this.params;
+    const today = new Date();
+    const price = this.state.btcPrice;
+
+    // Days calculations
+    const daysSinceGenesis = Math.floor((today - p.genesis) / 86400000);
+    const daysSinceBottom = Math.floor((today - p.bottomDate) / 86400000);
+    const daysInCycle = this.getDaysInCycle();
+    const daysToPeak = Math.floor((this.getPeakDate() - today) / 86400000);
+
+    // Log baseline (fair value)
+    const logBaseline = p.logA + p.logB * Math.log10(daysSinceGenesis);
+    const baseline = Math.pow(10, logBaseline);
+
+    // Sine calculation
+    const sine = Math.sin(Math.PI * daysSinceBottom / daysInCycle - Math.PI / 2);
+
+    // Expected σ from sine
+    const t = (sine + 1) / 2;
+    const expectedSigma = p.bottomStdDev + t * (p.peakStdDev - p.bottomStdDev);
+    const expectedPrice = baseline * Math.pow(10, expectedSigma * p.logStd);
+
+    // Actual σ
+    const actualSigma = (Math.log10(price) - logBaseline) / p.logStd;
+
+    // Delta (mispricing)
+    const delta = (price - expectedPrice) / expectedPrice;
+
+    // σ levels
+    const sigmaLevels = {};
+    [-3, -2, -1, 0, 0.5, 0.8, 1, 1.3, 1.5, 1.6, 2].forEach(s => {
+      sigmaLevels[s] = baseline * Math.pow(10, s * p.logStd);
+    });
+
+    // Zone and phase
+    let zone, phase;
+    if (sine >= 0.87) { phase = 'Euphoria'; zone = 'SELL'; }
+    else if (sine >= 0.71) { phase = 'Thrill'; zone = 'START SELLING'; }
+    else if (sine >= 0.50) { phase = 'Belief'; zone = 'HOLD'; }
+    else if (sine >= 0.25) { phase = 'Optimism'; zone = 'HOLD'; }
+    else if (sine >= 0.00) { phase = 'Hope'; zone = 'BUY'; }
+    else if (sine >= -0.50) { phase = 'Disbelief'; zone = 'BUY'; }
+    else if (sine >= -0.71) { phase = 'Fear'; zone = 'BUY AGGRESSIVE'; }
+    else if (sine >= -0.87) { phase = 'Capitulation'; zone = 'BUY AGGRESSIVE'; }
+    else { phase = 'Despair'; zone = 'BUY AGGRESSIVE'; }
+
+    // Dynamic exit levels (tighten if delta > 0)
+    const sellTight = delta > 0.15 ? 0.8 : delta > 0.05 ? 0.9 : 1.0;
+    const exits = [
+      { sigma: 1.0 * sellTight, label: 'Trim 25%' },
+      { sigma: 1.3 * sellTight, label: 'Sell 30%' },
+      { sigma: 1.6 * sellTight, label: 'Exit Rest' }
+    ];
+
+    // Dynamic entry levels (widen if delta > 0)
+    const buyMult = delta > 0.15 ? 1.3 : delta > 0.05 ? 1.15 : delta < -0.3 ? 0.6 : delta < -0.15 ? 0.8 : 1.0;
+    const entries = [
+      { pct: 0.10 * buyMult, label: 'Light' },
+      { pct: 0.20 * buyMult, label: 'Moderate' },
+      { pct: 0.35 * buyMult, label: 'Aggressive' }
+    ];
+
+    // Update UI
+    this.updateUI({
+      price, baseline, expectedPrice, delta, actualSigma, expectedSigma,
+      sine, daysSinceBottom, daysInCycle, daysToPeak,
+      sigmaLevels, phase, zone, exits, entries
+    });
+  },
+
+  updateUI(data) {
+    const fmt = (n, d = 0) => '$' + n.toLocaleString(undefined, { maximumFractionDigits: d });
+    const pct = (n) => (n >= 0 ? '+' : '') + (n * 100).toFixed(1) + '%';
+
+    // Header
+    document.getElementById('btc-price').textContent = fmt(data.price);
+    document.getElementById('baseline-price').textContent = fmt(data.baseline);
+    document.getElementById('expected-price').textContent = fmt(data.expectedPrice);
+    document.getElementById('delta').textContent = pct(data.delta);
+    document.getElementById('delta').className = 'text-lg font-semibold ' + (data.delta < 0 ? 'text-green-400' : 'text-red-400');
+
+    // Band prices
+    document.getElementById('band-2').textContent = fmt(data.sigmaLevels[2]);
+    document.getElementById('band-15').textContent = fmt(data.sigmaLevels[1.5]);
+    document.getElementById('band-1').textContent = fmt(data.sigmaLevels[1]);
+    document.getElementById('band-0').textContent = fmt(data.baseline);
+    document.getElementById('band-m1').textContent = fmt(data.sigmaLevels[-1]);
+    document.getElementById('band-m2').textContent = fmt(data.sigmaLevels[-2]);
+
+    // Price lines position (map σ to vertical position)
+    // -3σ = bottom (100%), +2σ = top (0%)
+    const sigmaToPercent = (s) => Math.max(0, Math.min(100, ((2 - s) / 5) * 100));
+    document.getElementById('actual-price-line').style.top = sigmaToPercent(data.actualSigma) + '%';
+    document.getElementById('expected-price-line').style.top = sigmaToPercent(data.expectedSigma) + '%';
+
+    // Sigma values
+    document.getElementById('current-sigma').textContent = data.actualSigma.toFixed(2) + 'σ';
+    document.getElementById('expected-sigma').textContent = data.expectedSigma.toFixed(2) + 'σ';
+
+    // Cycle progress
+    const cycleProgress = Math.max(0, Math.min(100, (data.daysSinceBottom / data.daysInCycle) * 100));
+    document.getElementById('cycle-marker').style.left = cycleProgress + '%';
+    document.getElementById('sine-value').textContent = data.sine.toFixed(3);
+    document.getElementById('day-in-cycle').textContent = data.daysSinceBottom;
+    document.getElementById('total-days').textContent = data.daysInCycle;
+    document.getElementById('days-to-peak').textContent = data.daysToPeak;
+
+    // Phase and zone
+    document.getElementById('phase-name').textContent = data.phase;
+    document.getElementById('zone-action').textContent = data.zone;
+    document.getElementById('current-zone').textContent = data.zone;
+
+    // Zone color
+    const zoneColors = {
+      'SELL': 'text-red-400',
+      'START SELLING': 'text-orange-400',
+      'HOLD': 'text-yellow-400',
+      'BUY': 'text-green-400',
+      'BUY AGGRESSIVE': 'text-blue-400'
+    };
+    document.getElementById('current-zone').className = 'text-xl font-bold ' + (zoneColors[data.zone] || 'text-gray-400');
+
+    // Mispricing display
+    const mispricePct = data.delta * 100;
+    document.getElementById('mispricing-display').textContent = pct(data.delta);
+    document.getElementById('mispricing-display').className = 'text-xl font-bold ' + (mispricePct < 0 ? 'text-green-400' : 'text-red-400');
+
+    // Signal text
+    let signal = '';
+    if (data.delta < -0.3) signal = 'Extreme undervaluation. Maximum accumulation zone.';
+    else if (data.delta < -0.15) signal = 'Significant discount to expected. Favor accumulation.';
+    else if (data.delta < 0) signal = 'Below expected. Continue building position.';
+    else if (data.delta < 0.15) signal = 'Near expected. Hold current position.';
+    else signal = 'Above expected. Consider taking profits.';
+    document.getElementById('signal-text').textContent = signal;
+
+    // Exit levels
+    document.getElementById('exit-1').textContent = fmt(data.sigmaLevels[1] * (data.exits[0].sigma / 1.0));
+    document.getElementById('exit-2').textContent = fmt(data.sigmaLevels[1.3] * (data.exits[1].sigma / 1.3));
+    document.getElementById('exit-3').textContent = fmt(data.sigmaLevels[1.6] * (data.exits[2].sigma / 1.6));
+
+    // Entry levels (% below current expected)
+    document.getElementById('entry-1').textContent = fmt(data.expectedPrice * (1 - data.entries[0].pct));
+    document.getElementById('entry-2').textContent = fmt(data.expectedPrice * (1 - data.entries[1].pct));
+    document.getElementById('entry-3').textContent = fmt(data.expectedPrice * (1 - data.entries[2].pct));
+
+    // Peak label
+    document.getElementById('peak-label').textContent = this.state.extended ? 'Peak (Nov 2026)' : 'Peak (Aug 2026)';
+    document.getElementById('param-peak').textContent = this.state.extended ? 'Nov 15, 2026' : 'Aug 15, 2026';
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => SineApp.init());
+</script>

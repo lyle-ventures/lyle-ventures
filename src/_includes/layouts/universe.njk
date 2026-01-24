@@ -64,7 +64,9 @@
         <!-- Desktop Nav Links -->
         <div class="hidden sm:flex items-center gap-6 lg:gap-8">
           <a href="/universe/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors {% if page.url == '/universe/' %}text-indigo-400{% endif %}">Dashboard</a>
-          <a href="/universe/valuation-calc/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors {% if page.url == '/universe/valuation-calc/' %}text-indigo-400{% endif %}">Valuation</a>
+          <a href="/universe/opus/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors {% if page.url == '/universe/opus/' %}text-indigo-400{% endif %}">Opus</a>
+          <a href="/universe/btc-sine/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors {% if page.url == '/universe/btc-sine/' %}text-indigo-400{% endif %}">Sine</a>
+          <a href="/universe/macro/" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-100 transition-colors {% if page.url == '/universe/macro/' %}text-indigo-400{% endif %}">Macro</a>
           <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-red-400 transition-colors">Logout</button>
         </div>
 
@@ -82,6 +84,9 @@
     <div id="mobile-menu" class="hidden sm:hidden border-t border-indigo-500/20 universe-bg">
       <div class="px-4 py-4 space-y-3">
         <a href="/universe/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Dashboard</a>
+        <a href="/universe/opus/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Investment Opus</a>
+        <a href="/universe/btc-sine/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">BTC Sine Model</a>
+        <a href="/universe/macro/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Macro Dashboard</a>
         <a href="/universe/valuation-calc/" class="block py-2 text-lg text-gray-300 hover:text-gray-100">Valuation Calculator</a>
         <button onclick="logout()" class="block py-2 text-lg text-red-400 hover:text-red-300 text-left w-full">Logout</button>
       </div>
