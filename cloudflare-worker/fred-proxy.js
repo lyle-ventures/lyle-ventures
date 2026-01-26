@@ -12,34 +12,29 @@
  * 6. Update macro.njk to use: https://fred-proxy.your-subdomain.workers.dev
  */
 
-const ALLOWED_ORIGINS = [
-  'https://lyle-ventures.xyz',
-  'https://www.lyle-ventures.xyz',
-  'http://localhost:8080',
-  'http://localhost:3000'
-];
-
 const FRED_API_BASE = 'https://api.stlouisfed.org/fred';
 
 export default {
   async fetch(request, env) {
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
-      return handleCORS(request);
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Max-Age': '86400'
+        }
+      });
     }
 
     const url = new URL(request.url);
-    const origin = request.headers.get('Origin');
-
-    // Validate origin
-    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
-      return new Response('Forbidden', { status: 403 });
-    }
 
     // Get series ID from query params
     const seriesId = url.searchParams.get('series_id');
     if (!seriesId) {
-      return jsonResponse({ error: 'Missing series_id parameter' }, 400, origin);
+      return jsonResponse({ error: 'Missing series_id parameter' }, 400);
     }
 
     // Build FRED API URL
@@ -50,7 +45,7 @@ export default {
     fredUrl.searchParams.set('sort_order', 'desc');
     fredUrl.searchParams.set('limit', url.searchParams.get('limit') || '10');
 
-    // Optional: observation_start/end
+    // Optional date filters
     if (url.searchParams.get('observation_start')) {
       fredUrl.searchParams.set('observation_start', url.searchParams.get('observation_start'));
     }
@@ -62,39 +57,23 @@ export default {
       const response = await fetch(fredUrl.toString());
       const data = await response.json();
 
-      // Return only the observations (strip API key exposure)
       return jsonResponse({
         series_id: seriesId,
         observations: data.observations || []
-      }, 200, origin);
+      }, 200);
     } catch (error) {
-      return jsonResponse({ error: 'Failed to fetch from FRED API' }, 500, origin);
+      return jsonResponse({ error: 'Failed to fetch from FRED API' }, 500);
     }
   }
 };
 
-function handleCORS(request) {
-  const origin = request.headers.get('Origin');
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': origin,
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '86400'
-      }
-    });
-  }
-  return new Response('Forbidden', { status: 403 });
-}
-
-function jsonResponse(data, status, origin) {
-  const headers = {
-    'Content-Type': 'application/json'
-  };
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    headers['Access-Control-Allow-Origin'] = origin;
-  }
-  return new Response(JSON.stringify(data), { status, headers });
+function jsonResponse(data, status) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'public, max-age=3600'
+    }
+  });
 }

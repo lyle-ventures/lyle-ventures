@@ -247,8 +247,8 @@ permalink: /universe/macro/
 // ============================================================================
 // Set your Cloudflare Worker URL here to enable live FRED data
 // Deploy cloudflare-worker/fred-proxy.js to Cloudflare Workers first
-// Example: 'https://fred-proxy.your-subdomain.workers.dev'
-const FRED_PROXY_URL = null;  // Set to your worker URL to enable live data
+// Cloudflare Worker proxies FRED API requests (avoids CORS + hides API key)
+const FRED_PROXY_URL = 'https://fred-proxy.ethan-109.workers.dev';
 
 // ============================================================================
 // MACRO DATA (Fallback when no proxy configured)
