@@ -8,18 +8,18 @@ permalink: /portfolio/
 <section class="py-24">
   <div class="max-w-6xl mx-auto px-6 lg:px-8">
     <!-- Header -->
-    <div class="mb-16">
+    <div class="mb-16 text-center">
       <p class="font-mono text-xs uppercase tracking-widest text-gray-400 mb-6">Portfolio</p>
-      <h1 class="font-sans font-light tracking-tighter text-5xl md:text-6xl max-w-3xl text-gray-900" style="line-height: 0.95;">
+      <h1 class="font-sans font-light tracking-tighter text-5xl md:text-6xl text-gray-900" style="line-height: 0.95;">
         Companies we've backed
       </h1>
-      <p class="text-lg text-gray-500 max-w-2xl mt-6 leading-relaxed">
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto mt-6 leading-relaxed">
         Above all, we love learning from the founders and companies we support.
       </p>
     </div>
 
     <!-- Sector filter -->
-    <div class="flex flex-wrap gap-3 mb-12">
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
       <button onclick="filterSector('all')" data-sector="all" class="sector-btn px-4 py-2 rounded-full bg-gray-900 text-white text-xs font-bold uppercase tracking-wider transition-all">All</button>
       {% for sector in site.sectors %}
       <button onclick="filterSector('{{ sector.name }}')" data-sector="{{ sector.name }}" class="sector-btn px-4 py-2 rounded-full border text-xs font-bold uppercase tracking-wider transition-all {% if sector.deemphasized %}border-black/10 text-gray-400 hover:border-black/20{% else %}border-black/20 text-gray-500 hover:border-black/40{% endif %}">{{ sector.name }}</button>
