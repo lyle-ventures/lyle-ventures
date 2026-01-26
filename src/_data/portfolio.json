@@ -2,9 +2,9 @@
   "companies": [
     {
       "name": "EloraHQ",
-      "sector": "AI Mechanicals",
-      "code": "AIM",
-      "color": "#00B4D8",
+      "sector": "Health Tech",
+      "code": "HLT",
+      "color": "#00C46A",
       "description": "EloraHQ is an advanced AI-powered care assistant that offers 24/7 personalized support, creates care plans, and so much more.",
       "url": "https://elorahq.com",
       "logo": "/portfolio/EloraHQ logo.png"
